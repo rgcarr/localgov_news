@@ -1,0 +1,11 @@
+{
+    "name": "localgovdrupal/localgov_news",
+    "description": "News for LocalGov Drupal",
+    "type": "drupal-module",
+    "homepage": "https://github.com/localgovdrupal/localgov_news",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "require": {
+        "localgovdrupal/localgov_core": "^1.0@alpha",
+    }
+}
