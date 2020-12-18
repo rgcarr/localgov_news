@@ -4,6 +4,9 @@ dependencies:
   config:
     - field.storage.node.body
     - node.type.localgov_news_article
+  enforced:
+    module:
+      - localgov_news
   module:
     - text
 id: node.localgov_news_article.body

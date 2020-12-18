@@ -5,6 +5,9 @@ dependencies:
     - field.storage.node.localgov_news_image
     - media.type.image
     - node.type.localgov_news_article
+  enforced:
+    module:
+      - localgov_news
 id: node.localgov_news_article.localgov_news_image
 field_name: localgov_news_image
 entity_type: node
