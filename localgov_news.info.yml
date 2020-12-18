@@ -1,0 +1,10 @@
+name: LocalGov News
+description: Provides news for LocalGov Drupal.
+core_version_requirement: ^8.9 || ^9
+type: module
+package: LocalGov Drupal
+
+dependencies:
+  - drupal:path
+  - drupal:views
+  - localgov_core:localgov_core
