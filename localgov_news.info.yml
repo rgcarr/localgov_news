@@ -7,4 +7,5 @@ package: LocalGov Drupal
 dependencies:
   - drupal:path
   - drupal:views
+  - field_group:field_group
   - localgov_core:localgov_core
