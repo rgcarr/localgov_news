@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * LocalGov Drupal News: Newsroom module file.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function localgov_newsroom_theme() {
+  return [
+    'localgov_featured_news_block' => [
+      'variables' => [
+        'featured' => [],
+      ],
+      'render element' => 'block',
+      'template' => 'localgov-featured-news-block',
+    ],
+  ];
+}

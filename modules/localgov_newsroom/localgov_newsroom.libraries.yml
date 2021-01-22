@@ -1,0 +1,5 @@
+localgov-featured-news:
+  version: 1.x
+  css:
+    theme:
+      css/localgov-featured-news.css: {}

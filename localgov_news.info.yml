@@ -1,11 +1,8 @@
-name: LocalGov News
-description: Provides news for LocalGov Drupal.
+name: 'LocalGov News: Core'
+description: Base module shared for LocalGov News. It won't do anything on its own. Enable LocalGov News article and Newsroom modules.
 core_version_requirement: ^8.9 || ^9
 type: module
 package: LocalGov Drupal
 
 dependencies:
-  - drupal:path
-  - drupal:views
-  - field_group:field_group
   - localgov_core:localgov_core

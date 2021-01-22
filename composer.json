@@ -6,6 +6,10 @@
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "require": {
+        "drupal/entity_browser": "^2.5",
+        "drupal/field_group": "~3.0",
+        "drupal/pathauto": "~1.0",
+        "localgovdrupal/localgov_topics": "^1.0@alpha",
         "localgovdrupal/localgov_core": "^1.0@alpha"
     }
 }

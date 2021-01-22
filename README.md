@@ -1,3 +1,8 @@
 # LocalGov Drupal News
 
-News content type, providing news items and listing page content types. A part of the LocalGovDrupal distribution.
+Provides the pages and navigation for presenting news articles. A part of the LocalGovDrupal distribution.
+
+Content types:
+
+* News article - a single news article, optionally categorised.
+* Newsroom page - a landing page to list and feature news articles.
