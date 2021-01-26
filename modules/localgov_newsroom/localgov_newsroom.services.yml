@@ -1,0 +1,15 @@
+services:
+  localgov_news.lazy_loader_base:
+    class: Drupal\localgov_news\LazyLoaderBase
+    arguments: ['@entity_type.manager']
+    abstract:  true
+
+  localgov_news.lazy_loader:
+    class: Drupal\localgov_news\LazyLoader
+    parent: localgov_news.lazy_loader_base
+
+  localgov_newsroom.newsroom:
+    class: Drupal\localgov_newsroom\Newsroom
+
+  localgov_newsroom.block_repository:
+    class: Drupal\block\BlockRepository
