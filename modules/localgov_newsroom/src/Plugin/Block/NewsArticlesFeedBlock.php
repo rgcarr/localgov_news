@@ -1,32 +1,18 @@
 <?php
 
-namespace Drupal\localgov_newsroom\PLugin\Block;
+namespace Drupal\localgov_newsroom\Plugin\Block;
 
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Session\AccountInterface;
 
 /**
- * Class ArticlesFeedBlock.
+ * Class NewsArticlesFeedBlock.
  *
  * @Block(
  *   id = "localgov_news_feed",
  *   admin_label = "News articles feed"
  * )
  */
-class NewsArticlesFeedBlock extends BlockBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function blockAccess(AccountInterface $account) {
-    if (!\Drupal::routeMatch()->getParameter('node')) {
-      return AccessResult::forbidden();
-    }
-
-    return parent::blockAccess($account);
-  }
+class NewsArticlesFeedBlock extends NewsAbstractBlockBase {
 
   /**
    * {@inheritdoc}
@@ -45,7 +31,7 @@ class NewsArticlesFeedBlock extends BlockBase {
     ];
 
     foreach (\Drupal::service('localgov_newsroom.newsroom')->getPage(0) as $node) {
-      $build['infinite_scroll']['#content'][] = \Drupal::entityTypeManager()
+      $build['infinite_scroll']['#content'][] = $this->entityTypeManager
         ->getViewBuilder('node')
         ->view($node, 'teaser');
     }
