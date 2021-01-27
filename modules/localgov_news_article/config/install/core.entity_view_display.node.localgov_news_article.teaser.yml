@@ -13,6 +13,7 @@ dependencies:
     module:
       - localgov_news
   module:
+    - datetime
     - text
     - user
 _core:
@@ -30,6 +31,15 @@ content:
       trim_length: 600
     third_party_settings: {  }
     region: content
+  localgov_news_date:
+    type: datetime_custom
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'j F Y'
+    third_party_settings: {  }
   localgov_news_image:
     type: entity_reference_entity_view
     weight: 1
@@ -42,6 +52,5 @@ content:
 hidden:
   links: true
   localgov_news_categories: true
-  localgov_news_date: true
   localgov_news_related: true
   search_api_excerpt: true
