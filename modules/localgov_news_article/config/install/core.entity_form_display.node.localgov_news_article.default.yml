@@ -37,6 +37,7 @@ third_party_settings:
     group_about_the_story:
       children:
         - title
+        - localgov_news_summary
         - localgov_news_date
         - localgov_news_categories
       parent_name: group_tabs
@@ -110,6 +111,11 @@ content:
   created:
     type: datetime_timestamp
     weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  localgov_news_summary:
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
