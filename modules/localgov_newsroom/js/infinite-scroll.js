@@ -33,7 +33,7 @@
 
             // If there are no more item to load, hide the button.
             if (responseJson.finished) {
-              button.addClass('hidden');
+              button.addClass('invisible');
             }
           }
         };
