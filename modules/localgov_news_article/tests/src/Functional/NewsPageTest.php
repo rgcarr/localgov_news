@@ -70,10 +70,10 @@ class NewsPageTest extends BrowserTestBase {
     $this->drupalGet('/admin/structure/types/manage/localgov_news_article/fields');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('body');
-    $this->assertSession()->pageTextContains('localgov_news_article_categories');
-    $this->assertSession()->pageTextContains('localgov_news_article_date');
-    $this->assertSession()->pageTextContains('localgov_news_article_image');
-    $this->assertSession()->pageTextContains('localgov_news_article_related');
+    $this->assertSession()->pageTextContains('localgov_news_categories');
+    $this->assertSession()->pageTextContains('localgov_news_date');
+    $this->assertSession()->pageTextContains('localgov_news_image');
+    $this->assertSession()->pageTextContains('localgov_news_related');
   }
 
   /**
