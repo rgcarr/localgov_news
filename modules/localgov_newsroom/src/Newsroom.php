@@ -20,8 +20,10 @@ class Newsroom {
    * Returns the nodes to be displayed per page.
    *
    * @param int $page
+   *   Page number being displayed.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
+   *   Entity interface
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -45,6 +47,7 @@ class Newsroom {
    * Returns a total count for nodes to be displayed.
    *
    * @return int
+   *   Number of nodes to display.
    */
   public function getCount() {
     $query = \Drupal::entityQuery('node')
@@ -62,6 +65,7 @@ class Newsroom {
    * Returns an array of node ids to ignore.
    *
    * @return array
+   *   Node IDs to exclude (visible in featured block)
    *
    * @throws
    */
@@ -77,6 +81,7 @@ class Newsroom {
    * Load the newsroom page.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
+   *   Entity interface.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
