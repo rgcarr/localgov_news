@@ -14,7 +14,7 @@ class Newsroom {
   /**
    * Total items per page.
    */
-  const TOTAL_PER_PAGE = 2;
+  const TOTAL_PER_PAGE = 10;
 
   /**
    * Returns the nodes to be displayed per page.
