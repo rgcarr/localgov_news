@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.localgov_news_default_image
+    - media.type.localgov_news_default_image
+    - node.type.localgov_news_article
+  enforced:
+    module:
+      - localgov_news
+id: node.localgov_news_article.localgov_news_default_image
+field_name: localgov_news_default_image
+entity_type: node
+bundle: localgov_news_article
+label: 'Select from a list'
+description: 'This will set the thumbnail image to one from this list, <br>but only if the thumbnail is left blank.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      localgov_news_default_image: localgov_news_default_image
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

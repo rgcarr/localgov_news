@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 
 /**
  * Implements hook_theme().
@@ -33,8 +35,32 @@ function localgov_news_article_form_alter(&$form, FormStateInterface $form_state
     $form['localgov_news_summary']['#required'] = TRUE;
     unset($form['body']['widget'][0]['summary']);
 
-    // Add our custom submit handler.
+    // Custom validator to handle image.
+    $form['#validate'][] = '_localgov_news_article_node_form_validate';
+
+    // Custom submit handler to handle summary and image.
     $form['actions']['submit']['#submit'][] = '_localgov_news_article_node_form_submit';
+  }
+}
+
+/**
+ * Custom news node validation handler.
+ * @param array $form
+ *   News article form.
+ * @param  \Drupal\Core\Form\FormStateInterface $form_state
+ *   News article form state.
+ */
+function _localgov_news_article_node_form_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+  // Get the Form values
+  $formValues = $form_state->getValues();
+
+  // Get any set default image media ID
+  $defaultImageMid = _localgov_news_article_fetch_selected_media($formValues['localgov_news_default_image']);
+
+  // Only replace the thumbnail if a default image is chosen and thumbnail is blank
+  if (empty($defaultImageMid) && empty($formValues['localgov_news_image']['selection'])) {
+    $form_state->setErrorByName('localgov_news_default_image', t('You must choose an image or upload a new one.'));
   }
 }
 
@@ -60,8 +86,36 @@ function _localgov_news_article_node_form_submit(array &$form, FormStateInterfac
   $node = $form_state->getFormObject()->getEntity();
   $node->get('body')->setValue($body);
 
+  // Set the thumbnail to the default news image if selected
+
+  $defaultImageMid = _localgov_news_article_fetch_selected_media($formValues['localgov_news_default_image']);
+
+  // Only replace the thumbnail if a default image is chosen and thumbnail is blank
+  if (!empty($defaultImageMid) && empty($formValues['localgov_news_image']['selection'])) {
+    $media = Media::load($defaultImageMid);
+    $node->get('localgov_news_image')->setValue($media);
+    //$node->get('localgov_news_image')->first()->get('alt')->setValue($media->field_media_image->alt);
+  }
+
   // Save the node.
   $node->save();
+}
+
+/**
+ * Fetch selected media input
+ *
+ *  Get the media element.
+ *  This check is to support media library
+ *  (which has selection key) and select widgets
+ * @param Array $fieldNewsDefaultImage Form Value of field_news_default_image
+ * @return Mixed Media ID, or null if empty
+ */
+function _localgov_news_article_fetch_selected_media(Array $fieldNewsDefaultImage) {
+
+  $defaultNewsImage = !empty($fieldNewsDefaultImage['selection']) ? reset($fieldNewsDefaultImage['selection']) : reset($fieldNewsDefaultImage);
+  $defaultImageMid = !empty($defaultNewsImage['target_id']) ? $defaultNewsImage['target_id'] : null;
+
+  return $defaultImageMid;
 }
 
 /**

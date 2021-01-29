@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
     - field.field.node.localgov_news_article.localgov_news_image
+    - field.field.node.localgov_news_article.localgov_news_default_image
     - field.field.node.localgov_news_article.localgov_news_related
     - node.type.localgov_news_article
   enforced:
@@ -47,10 +48,11 @@ content:
     label: hidden
     settings:
       link: true
-      view_mode: default
+      view_mode: localgov_newsroom_teaser
     third_party_settings: {  }
 hidden:
   links: true
   localgov_news_categories: true
+  localgov_news_default_image: true
   localgov_news_related: true
   search_api_excerpt: true
