@@ -2,20 +2,23 @@ langcode: en
 status: true
 dependencies:
   config:
-    - views.view.localgov_news_listing
+    - views.view.localgov_news_search
   module:
     - system
     - views
   theme:
     - localgov_theme
+  enforced:
+    module:
+      - localgov_news_article
 id: localgov_news_search
 theme: localgov_theme
 region: sidebar_second
 weight: -2
 provider: null
-plugin: 'views_exposed_filter_block:localgov_news_listing-page_all_news'
+plugin: 'views_exposed_filter_block:localgov_news_search-page_search_news'
 settings:
-  id: 'views_exposed_filter_block:localgov_news_listing-page_all_news'
+  id: 'views_exposed_filter_block:localgov_news_search-page_search_news'
   label: 'News search form'
   provider: views
   label_display: visible
