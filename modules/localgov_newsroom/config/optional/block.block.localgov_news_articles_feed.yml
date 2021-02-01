@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - localgov_newsroom
+  theme:
+    - localgov_theme
+id: localgov_news_articles_feed
+theme: localgov_theme
+region: content
+weight: 0
+provider: null
+plugin: localgov_news_feed
+settings:
+  id: localgov_news_feed
+  label: 'News articles feed'
+  provider: localgov_newsroom
+  label_display: visible
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      localgov_newsroom: localgov_newsroom
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
