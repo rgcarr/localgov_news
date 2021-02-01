@@ -24,7 +24,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   localgov_newsroom_featured:
-    type: entity_reference_revisions_autocomplete
+    type: entity_reference_autocomplete
     weight: 1
     region: content
     settings:
