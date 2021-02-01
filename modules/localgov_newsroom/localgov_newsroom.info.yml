@@ -13,4 +13,4 @@ dependencies:
   - drupal:path
   - drupal:text
   - drupal:user
-  - localgov_news:localgov_news_article
+  - localgov_news:localgov_news

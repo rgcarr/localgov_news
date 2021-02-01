@@ -10,7 +10,7 @@ dependencies:
     - localgov_theme
   enforced:
     module:
-      - localgov_news_article
+      - localgov_news
 id: localgov_news_search
 theme: localgov_theme
 region: sidebar_second

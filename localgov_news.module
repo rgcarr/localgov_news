@@ -11,7 +11,7 @@ use Drupal\media\Entity\Media;
 /**
  * Implements hook_theme().
  */
-function localgov_news_article_theme($existing, $type, $theme, $path) {
+function localgov_news_theme($existing, $type, $theme, $path) {
   return [
     'node__localgov_news_article__teaser' => [
       'template' => 'node--localgov-news-article--teaser',
@@ -23,7 +23,7 @@ function localgov_news_article_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_form_alter().
  */
-function localgov_news_article_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function localgov_news_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
   if (in_array($form_id, ['node_localgov_news_article_form', 'node_localgov_news_article_edit_form'])) {
 
@@ -35,10 +35,10 @@ function localgov_news_article_form_alter(&$form, FormStateInterface $form_state
     unset($form['body']['widget'][0]['summary']);
 
     // Custom validator to handle image.
-    $form['#validate'][] = '_localgov_news_article_node_form_validate';
+    $form['#validate'][] = '_localgov_news_node_form_validate';
 
     // Custom submit handler to handle summary and image.
-    $form['actions']['submit']['#submit'][] = '_localgov_news_article_node_form_submit';
+    $form['actions']['submit']['#submit'][] = '_localgov_news_node_form_submit';
   }
 }
 
@@ -50,13 +50,13 @@ function localgov_news_article_form_alter(&$form, FormStateInterface $form_state
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   News article form state.
  */
-function _localgov_news_article_node_form_validate(array &$form, FormStateInterface $form_state) {
+function _localgov_news_node_form_validate(array &$form, FormStateInterface $form_state) {
 
   // Get the Form values.
   $formValues = $form_state->getValues();
 
   // Get any set default image media ID.
-  $defaultImageMid = _localgov_news_article_fetch_selected_media($formValues['localgov_news_default_image']);
+  $defaultImageMid = _localgov_news_fetch_selected_media($formValues['localgov_news_default_image']);
 
   // Replace the thumbnail if a default image is chosen and thumbnail is blank.
   if (empty($defaultImageMid) && empty($formValues['localgov_news_image']['selection'])) {
@@ -72,7 +72,7 @@ function _localgov_news_article_node_form_validate(array &$form, FormStateInterf
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   News article form state.
  */
-function _localgov_news_article_node_form_submit(array &$form, FormStateInterface $form_state) {
+function _localgov_news_node_form_submit(array &$form, FormStateInterface $form_state) {
 
   // Get the form values.
   $formValues = $form_state->getValues();
@@ -87,7 +87,7 @@ function _localgov_news_article_node_form_submit(array &$form, FormStateInterfac
   $node->get('body')->setValue($body);
 
   // Set the thumbnail to the default news image if selected.
-  $defaultImageMid = _localgov_news_article_fetch_selected_media($formValues['localgov_news_default_image']);
+  $defaultImageMid = _localgov_news_fetch_selected_media($formValues['localgov_news_default_image']);
 
   // Replace the thumbnail if a default image is chosen and thumbnail is blank.
   if (!empty($defaultImageMid) && empty($formValues['localgov_news_image']['selection'])) {
@@ -113,7 +113,7 @@ function _localgov_news_article_node_form_submit(array &$form, FormStateInterfac
  * @return Mixed
  *   Media ID, or null if empty
  */
-function _localgov_news_article_fetch_selected_media(array $fieldNewsDefaultImage) {
+function _localgov_news_fetch_selected_media(array $fieldNewsDefaultImage) {
 
   $defaultNewsImage = !empty($fieldNewsDefaultImage['selection']) ? reset($fieldNewsDefaultImage['selection']) : reset($fieldNewsDefaultImage);
   $defaultImageMid = !empty($defaultNewsImage['target_id']) ? $defaultNewsImage['target_id'] : NULL;
@@ -124,7 +124,7 @@ function _localgov_news_article_fetch_selected_media(array $fieldNewsDefaultImag
 /**
  * Implements hook_entity_extra_field_info().
  */
-function localgov_news_article_entity_extra_field_info() {
+function localgov_news_entity_extra_field_info() {
 
   // Add summary pseudo field to form display.
   $extra_field['node']['news']['form']['localgov_news_summary'] = [
