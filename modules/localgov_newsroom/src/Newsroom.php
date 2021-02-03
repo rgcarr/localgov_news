@@ -33,7 +33,7 @@ class Newsroom {
       ->condition('type', 'localgov_news_article')
       ->condition('status', Node::PUBLISHED)
       ->range($page * self::TOTAL_PER_PAGE, self::TOTAL_PER_PAGE)
-      ->sort('created', 'DESC');
+      ->sort('localgov_news_date', 'DESC');
     $exclude_nodes = $this->excludeNodes();
     if (!empty($exclude_nodes)) {
       $query->condition('nid', $exclude_nodes, 'NOT IN');
