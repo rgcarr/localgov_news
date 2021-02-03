@@ -17,6 +17,10 @@ function localgov_news_theme($existing, $type, $theme, $path) {
       'template' => 'node--localgov-news-article--teaser',
       'base hook' => 'node',
     ],
+    'node__localgov_news_article__full' => [
+      'template' => 'node--localgov-news-article--full',
+      'base hook' => 'node',
+    ],
   ];
 }
 
