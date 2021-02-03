@@ -68,12 +68,21 @@
 * @ingroup themeable
 */
 #}
-
-<article>
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
+<article{{ attributes.addClass(classes) }}>
     {{ content.localgov_news_image }}
-  <h3>
-    <a href="{{ url }}">{{ label }}</a>
-  </h3>
-  <p>{{ node.body.summary }}</p>
-  <div>{{ content.localgov_news_date }}</div>
+  <div{{ content_attributes.addClass('node__content') }}>
+    <h3>
+      <a href="{{ url }}">{{ label }}</a>
+    </h3>
+    <p>{{ node.body.summary }}</p>
+    <div class="localgov_news_date">{{ content.localgov_news_date }}</div>
+  </div>
 </article>
