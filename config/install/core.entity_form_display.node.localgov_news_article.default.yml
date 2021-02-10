@@ -5,6 +5,7 @@ dependencies:
     - field.field.node.localgov_news_article.body
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
+    - field.field.node.localgov_news_article.localgov_news_default_image
     - field.field.node.localgov_news_article.localgov_news_image
     - field.field.node.localgov_news_article.localgov_news_related
     - node.type.localgov_news_article
@@ -37,6 +38,7 @@ third_party_settings:
     group_about_the_story:
       children:
         - title
+        - localgov_news_summary
         - localgov_news_date
         - localgov_news_categories
       parent_name: group_tabs
@@ -52,6 +54,7 @@ third_party_settings:
       label: 'About the story'
     group_image:
       children:
+        - localgov_news_default_image
         - localgov_news_image
       parent_name: group_tabs
       weight: 5
@@ -113,6 +116,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  localgov_news_summary:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   localgov_news_categories:
     weight: 3
     settings:
@@ -128,6 +136,12 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
+    region: content
+  localgov_news_default_image:
+    type: options_select
+    weight: 8
+    settings: {  }
+    third_party_settings: {  }
     region: content
   localgov_news_image:
     type: media_library_widget

@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.localgov_newsroom.localgov_newsroom_featured
+    - node.type.localgov_newsroom
+  enforced:
+    module:
+      - localgov_newsroom
+  module:
+    - user
+id: node.localgov_newsroom.default
+targetEntityType: node
+bundle: localgov_newsroom
+mode: default
+content:
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  localgov_newsroom_featured: true
+  search_api_excerpt: true

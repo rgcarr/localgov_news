@@ -41,6 +41,7 @@ class NewsPageTest extends BrowserTestBase {
     'localgov_media',
     'localgov_topics',
     'localgov_news',
+    'localgov_news_article',
     'field_ui',
     'pathauto',
   ];

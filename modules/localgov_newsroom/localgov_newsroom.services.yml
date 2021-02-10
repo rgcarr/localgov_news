@@ -1,0 +1,6 @@
+services:
+  localgov_newsroom.newsroom:
+    class: Drupal\localgov_newsroom\Newsroom
+
+  localgov_newsroom.block_repository:
+    class: Drupal\block\BlockRepository

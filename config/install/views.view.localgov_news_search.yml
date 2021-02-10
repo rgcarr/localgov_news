@@ -15,10 +15,12 @@ dependencies:
     - taxonomy
     - text
     - user
-id: localgov_news_listing
-label: 'News listing'
+_core:
+  default_config_hash: 7TKHqB69TKAsOGaQ2PGvc1IrFW7Ik6CmgFd1NXu2P5g
+id: localgov_news_search
+label: 'News search'
 module: views
-description: 'Listing of news with filtering by category and date.'
+description: 'News search view'
 tag: ''
 base_table: node_field_data
 base_field: nid
@@ -79,6 +81,15 @@ display:
         type: default
       row:
         type: fields
+        options:
+          default_field_elements: true
+          inline:
+            localgov_news_image: localgov_news_image
+            title: title
+            body: body
+            localgov_news_date: localgov_news_date
+          separator: ''
+          hide_empty: false
       fields:
         localgov_news_image:
           id: localgov_news_image
@@ -468,10 +479,23 @@ display:
             label: ''
           granularity: second
           plugin_id: datetime
-      title: News
+      title: 'News search'
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: '<p>No results found.</p>'
+            format: wysiwyg
+          plugin_id: text
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
@@ -493,14 +517,14 @@ display:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.localgov_news_date'
         - 'config:field.storage.node.localgov_news_image'
-  page_all_news:
+  page_search_news:
     display_plugin: page
-    id: page_all_news
+    id: page_search_news
     display_title: Page
     position: 1
     display_options:
       display_extenders: {  }
-      path: news
+      path: news/search
       exposed_block: true
     cache_metadata:
       max-age: -1
