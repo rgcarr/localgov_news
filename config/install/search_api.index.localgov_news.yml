@@ -47,7 +47,6 @@ datasource_settings:
       default: false
       selected:
         - localgov_news_article
-        - localgov_newsroom
     languages:
       default: true
       selected: {  }
