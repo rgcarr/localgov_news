@@ -7,8 +7,8 @@ dependencies:
     - search_api.server.localgov_news
     - core.entity_view_mode.node.search_index
   module:
-    - search_api
     - node
+    - search_api
 id: localgov_news
 name: News
 description: ''
@@ -19,7 +19,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: localgov_news_categories
     type: integer
-    boost: 0.5
     dependencies:
       config:
         - field.storage.node.localgov_news_categories
@@ -40,7 +39,15 @@ field_settings:
         anonymous: anonymous
       view_mode:
         'entity:node':
-          localgov_news: search_index
+          localgov_news_article: search_index
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
 datasource_settings:
   'entity:node':
     bundles:
@@ -58,7 +65,8 @@ processor_settings:
     all_fields: true
     fields:
       - rendered_item
-    title: true
+      - title
+    title: false
     alt: true
     tags:
       b: 2
@@ -75,6 +83,7 @@ processor_settings:
     all_fields: true
     fields:
       - rendered_item
+      - title
     weights:
       preprocess_index: -20
       preprocess_query: -20
@@ -148,6 +157,7 @@ processor_settings:
     all_fields: true
     fields:
       - rendered_item
+      - title
     weights:
       preprocess_index: -20
       preprocess_query: -20
