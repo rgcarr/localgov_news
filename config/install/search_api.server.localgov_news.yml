@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - search_api_db
+  enforced:
+    module:
+      - localgov_news
 id: localgov_news
 name: News
 description: 'Default news search server. For convenience of installation. Can be used or replaced.'

@@ -9,6 +9,9 @@ dependencies:
   module:
     - node
     - search_api
+  enforced:
+    module:
+      - localgov_news
 id: localgov_news
 name: News
 description: ''
