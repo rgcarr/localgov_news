@@ -222,9 +222,9 @@ display:
       tags:
         - 'config:field.storage.node.localgov_news_categories'
         - 'config:search_api.index.localgov_news'
-  localgov_news_search:
+  page_search_news:
     display_plugin: page
-    id: localgov_news_search
+    id: page_search_news
     display_title: Page
     position: 1
     display_options:
