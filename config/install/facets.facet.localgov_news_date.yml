@@ -4,6 +4,9 @@ dependencies:
   config:
     - search_api.index.localgov_news
     - views.view.localgov_news_search
+  enforced:
+    module:
+      - localgov_news
   module:
     - search_api
 id: localgov_news_date
