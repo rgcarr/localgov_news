@@ -25,6 +25,14 @@ function localgov_news_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implements hook_page_attachments().
+ */
+function localgov_news_page_attachments(array &$attachments) {
+  // Attach news styling library.
+  $attachments['#attached']['library'][] = 'localgov_news/news-styling';
+}
+
+/**
  * Implements hook_form_alter().
  */
 function localgov_news_form_alter(&$form, FormStateInterface $form_state, $form_id) {
