@@ -73,11 +73,15 @@
       <span class="newsroom--date">{{ node.localgov_news_date()|date("j F Y") }}</span>
 
       {% if not node.localgov_news_categories.isEmpty() %}
-        <span class="newsroom--category">
-        <a href="{{ path('entity.taxonomy_term.canonical', {'taxonomy_term': node.localgov_news_categories.entity.id()}) }}">
-          {{ node.localgov_news_categories.entity.label() }}
-        </a>
-      </span>
+        <ul class="newsroom--categories" aria-label="Article categories">
+        {% for category in node.localgov_news_categories %}
+          <li>
+            <a href="{{ path('entity.taxonomy_term.canonical', {'taxonomy_term': category.entity.id()}) }}" rel="category tag">
+              {{ category.entity.label() }}
+            </a>
+          </li>
+        {% endfor %}
+        </ul>
       {% endif %}
 
     </div>
