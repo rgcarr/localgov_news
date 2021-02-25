@@ -7,8 +7,11 @@
     "minimum-stability": "dev",
     "require": {
         "drupal/entity_browser": "^2.5",
+        "drupal/facets": "^1.5",
         "drupal/field_group": "~3.0",
         "drupal/pathauto": "~1.0",
+        "drupal/search_api": "^1.17",
+        "drupal/search_api_autocomplete": "^1.3",
         "localgovdrupal/localgov_topics": "^1.0@alpha",
         "localgovdrupal/localgov_core": "^1.0@alpha"
     }

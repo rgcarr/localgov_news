@@ -15,7 +15,11 @@ dependencies:
   - drupal:text
   - drupal:user
   - entity_browser:entity_browser
+  - facets:facets
   - field_group:field_group
   - link_attributes:link_attributes
   - localgov_core:localgov_core
   - pathauto:pathauto
+  - search_api:search_api
+  - search_api:search_api_db
+  - search_api_autocomplete
