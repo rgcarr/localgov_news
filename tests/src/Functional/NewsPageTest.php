@@ -22,7 +22,12 @@ class NewsPageTest extends BrowserTestBase {
    *
    * @var string
    */
-  protected $profile = 'standard';
+  protected $profile = 'localgov';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'localgov_theme';
 
   /**
    * A user with permission to bypass content access checks.
@@ -41,7 +46,7 @@ class NewsPageTest extends BrowserTestBase {
     'localgov_media',
     'localgov_topics',
     'localgov_news',
-    'localgov_news_article',
+    'localgov_newsroom',
     'field_ui',
     'pathauto',
   ];
@@ -77,24 +82,45 @@ class NewsPageTest extends BrowserTestBase {
   }
 
   /**
-   * Pathauto and breadcrumbs.
+   * News article, newsroom, featured news.
    */
-  public function testNewsPaths() {
-    $this->createNode([
+  public function testNewsPages() {
+    $body = $this->randomMachineName(64);
+    $newsArticle = $this->createNode([
       'title' => 'News article 1',
+      'body' => $body,
       'type' => 'localgov_news_article',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+
+    $this->drupalGet('news/' . date('Y') . '/news-article-1');
+    $this->assertText('News article 1');
+    $this->assertText($body);
+
+    $newsroom = $this->createNode([
+      'title' => 'News',
+      'type' => 'localgov_newsroom',
+      'path' => [
+        'alias' => '/news',
+      ],
       'status' => NodeInterface::PUBLISHED,
     ]);
 
     $this->drupalGet('news');
     $this->assertText('News article 1');
 
-    $this->drupalGet('news/' . date('Y') . '/news-article-1');
-    $this->assertText('News article 1');
+    // Add News article 1 to the featured news block
+    $newsroom->set('localgov_newsroom_featured', $newsArticle->id());
+    $newsroom->save();
+    drupal_flush_all_caches();
+    $this->drupalGet('news');
 
-    $trail = ['' => 'Home'];
-    $trail += ['news' => 'News'];
-    $this->assertBreadcrumb(NULL, $trail);
+    // Test the Featured news block displays
+    $this->assertSession()->elementExists('css', 'div#block-localgov-featured-news-articles');
+
+    // Test that News article 1 is no longer included in the news listing
+    $this->assertSession()->elementNotExists('css', 'div#infinite-scroll--wrapper article');
+
   }
 
 }
