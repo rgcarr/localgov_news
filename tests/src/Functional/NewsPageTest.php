@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\localgov_news\Functional;
 
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\media\Entity\Media;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -109,17 +111,67 @@ class NewsPageTest extends BrowserTestBase {
     $this->drupalGet('news');
     $this->assertText('News article 1');
 
-    // Add News article 1 to the featured news block
+    // Add News article 1 to the featured news block.
     $newsroom->set('localgov_newsroom_featured', $newsArticle->id());
     $newsroom->save();
     drupal_flush_all_caches();
     $this->drupalGet('news');
 
-    // Test the Featured news block displays
+    // Test the Featured news block displays.
     $this->assertSession()->elementExists('css', 'div#block-localgov-featured-news-articles');
 
-    // Test that News article 1 is no longer included in the news listing
+    // Test that News article 1 is no longer included in the news listing.
     $this->assertSession()->elementNotExists('css', 'div#infinite-scroll--wrapper article');
+
+  }
+
+  /**
+   * News default media.
+   */
+  public function testNewsMedia() {
+    // Image file for testing.
+    $imageData = file_get_contents('https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg');
+    $destination = 'public://example.jpg';
+    $imageFile = file_save_data($imageData, $destination, FileSystemInterface::EXISTS_REPLACE);
+    $this->assertTrue(file_exists($destination));
+
+    // Create default news image entity using example file.
+    $newsMedia = Media::create([
+      'name' => 'Example',
+      'bundle' => 'localgov_news_default_image',
+      'field_media_image' => [
+        'target_id' => $imageFile->id(),
+        'alt' => 'Alternative text',
+      ],
+    ]);
+    $newsMedia->setPublished()->save();
+
+    // Confirm default news media created.
+    $this->assertSame('Example', $newsMedia->getName(), 'The media item was not created with the correct name.');
+
+    // Use admin form to select default media because...
+    // localgov_news_node_form_submit sets image entity from default.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('node/add/localgov_news_article');
+    $form = $this->getSession()->getPage();
+    $form->fillField('edit-title-0-value', 'News article with default image');
+    $form->fillField('edit-localgov-news-summary', 'News article summary text');
+    $form->fillField('edit-body-0-value', 'News article body text');
+    $form->selectFieldOption('edit-localgov-news-default-image', $newsMedia->id());
+    $form->pressButton('edit-submit');
+
+    // Images only appear in the newsroom and search results.
+    $this->createNode([
+      'title' => 'News',
+      'type' => 'localgov_newsroom',
+      'path' => [
+        'alias' => '/news',
+      ],
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+
+    $this->drupalGet('news');
+    $this->assertSession()->responseContains('Alternative text');
 
   }
 
