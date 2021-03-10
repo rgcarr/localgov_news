@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\localgov_alert_banner\FunctionalJavascript;
+namespace Drupal\Tests\localgov_news\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\NodeInterface;
