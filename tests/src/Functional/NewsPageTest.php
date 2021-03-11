@@ -7,7 +7,6 @@ use Drupal\media\Entity\Media;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
-use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
  * Tests LocalGov News article page.
@@ -17,7 +16,6 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 class NewsPageTest extends BrowserTestBase {
 
   use NodeCreationTrait;
-  use AssertBreadcrumbTrait;
 
   /**
    * Test breadcrumbs in the Standard profile.

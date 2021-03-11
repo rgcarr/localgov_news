@@ -139,3 +139,15 @@ function localgov_news_entity_extra_field_info() {
 
   return $extra_field;
 }
+
+/**
+ * Implements hook_tokens_alter().
+ */
+function localgov_news_tokens_alter(&$replacements, $context) {
+  // Remove commas in news categories so they are not split.
+  if ($context['type'] == 'node') {
+    if (isset($replacements['[node:localgov_news_categories:0:entity]'])) {
+      $replacements['[node:localgov_news_categories:0:entity]'] = stripslashes(str_replace(',', '', $replacements['[node:localgov_news_categories:0:entity]']));
+    }
+  }
+}

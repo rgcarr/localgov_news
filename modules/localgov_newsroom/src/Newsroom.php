@@ -67,7 +67,8 @@ class Newsroom {
    * @return array
    *   Node IDs to exclude (visible in featured block)
    *
-   * @throws
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   private function excludeNodes() {
     $nodes = [];

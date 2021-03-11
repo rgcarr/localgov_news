@@ -22,4 +22,6 @@ dependencies:
   - pathauto:pathauto
   - search_api:search_api
   - search_api:search_api_db
-  - search_api_autocomplete
+  - search_api_autocomplete:search_api_autocomplete
+  - schema_metatag:schema_metatag
+  - schema_metatag:schema_article
