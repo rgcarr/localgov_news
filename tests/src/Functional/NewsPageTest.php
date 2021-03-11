@@ -16,7 +16,6 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
 class NewsPageTest extends BrowserTestBase {
 
   use NodeCreationTrait;
-  use AssertBreadcrumbTrait;
 
   /**
    * Test breadcrumbs in the Standard profile.
