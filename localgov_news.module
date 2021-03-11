@@ -144,7 +144,7 @@ function localgov_news_entity_extra_field_info() {
  * Implements hook_tokens_alter().
  */
 function localgov_news_tokens_alter(&$replacements, $context) {
-  // Encode commas in news categories so they are not split.
+  // Remove commas in news categories so they are not split.
   if ($context['type'] == 'node') {
     if (isset($replacements['[node:localgov_news_categories:0:entity]'])) {
       $replacements['[node:localgov_news_categories:0:entity]'] = stripslashes(str_replace(',', '', $replacements['[node:localgov_news_categories:0:entity]']));
