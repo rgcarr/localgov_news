@@ -74,9 +74,9 @@
 
       {% if not node.localgov_news_categories.isEmpty() %}
         <ul class="news--categories" aria-label="Article categories">
-        {% for category in node.localgov_news_categories %}
+        {% for category in display_categories %}
           <li>
-            <a href="{{ path('entity.taxonomy_term.canonical', {'taxonomy_term': category.entity.id()}) }}" rel="category tag">{{ category.entity.label() }}</a>
+            <a href="{{ category.url }}">{{ category.title }}</a>
           </li>
         {% endfor %}
         </ul>
