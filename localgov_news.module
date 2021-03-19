@@ -176,7 +176,8 @@ function localgov_news_preprocess_node(&$variables) {
 
         if ($facetExists) {
           $url = \Drupal::service('facets.utility.url_generator')->getUrl(['localgov_news_category' => [$category->id()]]);
-        } else {
+        }
+        else {
           $url = Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $category->id()]);
         }
 
