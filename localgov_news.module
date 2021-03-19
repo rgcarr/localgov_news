@@ -168,23 +168,25 @@ function localgov_news_tokens_alter(&$replacements, $context) {
 function localgov_news_preprocess_node(&$variables) {
   // Link categories to facet filters if being used.
   $node = $variables['node'];
-  $displayCategories = [];
-  if ($node->get('localgov_news_categories')->referencedEntities()) {
-    foreach ($node->get('localgov_news_categories')->referencedEntities() as $category) {
+  if ($node->hasField('localgov_news_categories')) {
+    $displayCategories = [];
+    $facetExists = Facet::load('localgov_news_category');
+    if ($node->get('localgov_news_categories')->referencedEntities()) {
+      foreach ($node->get('localgov_news_categories')->referencedEntities() as $category) {
 
-      if (Facet::load('localgov_news_category')) {
-        $url = \Drupal::service('facets.utility.url_generator')->getUrl(['localgov_news_category' => [$category->id()]]);
-      }
-      else {
-        $url = Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $category->id()]);
-      }
+        if ($facetExists) {
+          $url = \Drupal::service('facets.utility.url_generator')->getUrl(['localgov_news_category' => [$category->id()]]);
+        } else {
+          $url = Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $category->id()]);
+        }
 
-      $displayCategories[] = [
-        'title' => $category->getName(),
-        'url' => $url,
-      ];
+        $displayCategories[] = [
+          'title' => $category->getName(),
+          'url' => $url,
+        ];
+      }
     }
+    $variables['display_categories'] = $displayCategories;
   }
-  $variables['display_categories'] = $displayCategories;
 
 }
