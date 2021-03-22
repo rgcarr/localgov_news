@@ -77,7 +77,7 @@ class NewsroomController extends ControllerBase {
     return new JsonResponse([
       'html' => implode('', $results),
       'totalItems' => $this->newsroom->getCount(),
-      'finished' => (($this->requestStack->getCurrentRequest()->get('page') + 1) * 10) >= $this->newsroom->getCount(),
+      'finished' => (($this->requestStack->getCurrentRequest()->get('page') + 1) * Newsroom::TOTAL_PER_PAGE) >= $this->newsroom->getCount(),
     ]);
   }
 
