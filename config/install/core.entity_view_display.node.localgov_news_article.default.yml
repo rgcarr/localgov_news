@@ -44,9 +44,7 @@ content:
     label: hidden
     settings:
       facet: localgov_news_category
-    third_party_settings:
-      field_formatter_class:
-        class: ''
+    third_party_settings: {  }
   localgov_news_related:
     weight: 3
     label: hidden
