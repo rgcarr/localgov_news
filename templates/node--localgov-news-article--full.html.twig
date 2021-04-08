@@ -1,7 +1,6 @@
 {#
 /**
  * @file
- * Bartik's theme implementation to display a node.
  *
  * Available variables:
  * - node: The node entity with limited access to object properties and methods.
@@ -67,25 +66,41 @@
  */
 #}
 
-<article{{ content_attributes.addClass('content').addClass('newsroom--article') }}>
-  <div>
-    <div class="newsroom--info">
-      <span class="newsroom--date">{{ node.localgov_news_date()|date("j F Y") }}</span>
+{%
+  set classes = [
+  'news-article',
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
 
-      {% if not node.localgov_news_categories.isEmpty() %}
-        <ul class="news--categories" aria-label="Article categories">
-        {% for category in display_categories %}
+<article{{ attributes.addClass(classes) }}>
+
+  <div class="news-article__metadata">
+    <time datetime="{{ node.localgov_news_date()|date("U") }}" class="news-article__metadata-item news-article__metadata--date">
+      {{ node.localgov_news_date()|date("j F Y") }}
+    </time>
+    {% if not node.localgov_news_categories.isEmpty() %}
+      <ul class="news-article__metadata-item news-article__metadata--categories" aria-label="Article categories">
+        {% for key,value in node.localgov_news_categories.value %}
           <li>
-            <a href="{{ category.url }}">{{ category.title }}</a>
+            {{ content.localgov_news_categories[key] }}
           </li>
         {% endfor %}
-        </ul>
-      {% endif %}
-
-    </div>
-
-    <h1>{{ label }}</h1>
+      </ul>
+    {% endif %}
   </div>
 
-  {{ content }}
+  <h1{{ title_attributes.addClass('news-article__title') }}>
+    {{ label }}
+  </h1>
+
+  <div{{ content_attributes.addClass('news-article__content node__content') }}>
+    {{ content|without('localgov_news_date', 'localgov_news_categories') }}
+  </div>
+
 </article>

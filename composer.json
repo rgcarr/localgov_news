@@ -7,6 +7,7 @@
     "minimum-stability": "dev",
     "require": {
         "drupal/entity_browser": "^2.5",
+        "drupal/entity_reference_facet_link": "^1.0.0-beta6",
         "drupal/facets": "^1.5",
         "drupal/field_group": "~3.0",
         "drupal/pathauto": "~1.0",

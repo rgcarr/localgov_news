@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - facets.facet.localgov_news_category
     - field.field.node.localgov_news_article.body
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
@@ -13,10 +14,12 @@ dependencies:
     module:
       - localgov_news
   module:
+    - entity_reference_facet_link
+    - field_formatter_class
     - text
     - user
 _core:
-  default_config_hash: HnCcsY16jsB6z8_EM4EJ_e3wUa9HBrSzCjns1n46lcU
+  default_config_hash: zunn9BQJSdUbV81LAig7gqZku-bmhjvOTJmP9JYx9dU
 id: node.localgov_news_article.default
 targetEntityType: node
 bundle: localgov_news_article
@@ -25,7 +28,7 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 1
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     region: content
@@ -34,8 +37,18 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  localgov_news_categories:
+    type: entity_reference_facet_link
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      facet: localgov_news_category
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   localgov_news_related:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       view_mode: teaser
@@ -44,7 +57,6 @@ content:
     type: entity_reference_entity_view
     region: content
 hidden:
-  localgov_news_categories: true
   localgov_news_date: true
   localgov_news_default_image: true
   localgov_news_image: true
