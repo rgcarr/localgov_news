@@ -18,8 +18,6 @@ dependencies:
     - field_formatter_class
     - text
     - user
-_core:
-  default_config_hash: zunn9BQJSdUbV81LAig7gqZku-bmhjvOTJmP9JYx9dU
 id: node.localgov_news_article.default
 targetEntityType: node
 bundle: localgov_news_article

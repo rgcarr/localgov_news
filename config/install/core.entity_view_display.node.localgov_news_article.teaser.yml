@@ -19,8 +19,6 @@ dependencies:
     - media
     - text
     - user
-_core:
-  default_config_hash: kdblVliCWv0cp6dWrYUCfNSV6Y-6knR2h4v3ZVAtje4
 id: node.localgov_news_article.teaser
 targetEntityType: node
 bundle: localgov_news_article
