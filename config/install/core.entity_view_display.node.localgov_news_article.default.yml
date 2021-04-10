@@ -14,6 +14,7 @@ dependencies:
     module:
       - localgov_news
   module:
+    - datetime
     - entity_reference_facet_link
     - field_formatter_class
     - text
@@ -26,7 +27,7 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 2
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     region: content
@@ -37,14 +38,27 @@ content:
     third_party_settings: {  }
   localgov_news_categories:
     type: entity_reference_facet_link
-    weight: 1
+    weight: 2
     region: content
     label: hidden
     settings:
       facet: localgov_news_category
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+  localgov_news_date:
+    type: datetime_custom
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'j F Y'
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   localgov_news_related:
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       view_mode: teaser
@@ -53,7 +67,6 @@ content:
     type: entity_reference_entity_view
     region: content
 hidden:
-  localgov_news_date: true
   localgov_news_default_image: true
   localgov_news_image: true
   search_api_excerpt: true
