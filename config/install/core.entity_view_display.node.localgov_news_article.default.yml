@@ -43,9 +43,7 @@ content:
     label: hidden
     settings:
       facet: localgov_news_category
-    third_party_settings:
-      field_formatter_class:
-        class: ''
+    third_party_settings: {  }
   localgov_news_date:
     type: datetime_custom
     weight: 1
@@ -54,9 +52,7 @@ content:
     settings:
       timezone_override: ''
       date_format: 'j F Y'
-    third_party_settings:
-      field_formatter_class:
-        class: ''
+    third_party_settings: {  }
   localgov_news_related:
     weight: 4
     label: hidden
