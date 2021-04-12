@@ -87,7 +87,7 @@
     {% if not node.localgov_news_categories.isEmpty() %}
       <ul class="news-article__metadata-item news-article__metadata--categories" aria-label="{{ 'Article categories'|t }}">
         {% for key,value in node.localgov_news_categories.value %}
-          <li>
+          <li class="news-article__category">
             {{ content.localgov_news_categories[key] }}
           </li>
         {% endfor %}
