@@ -2,6 +2,7 @@
 
 namespace Drupal\localgov_newsroom;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\Entity\Node;
 
 /**
@@ -17,6 +18,23 @@ class Newsroom {
   const TOTAL_PER_PAGE = 10;
 
   /**
+   * Entity Type Manager service.
+   *
+   * @var Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Initialise a Newsroom instance.
+   *
+   * @param Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity Type Manager service.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
    * Returns the nodes to be displayed per page.
    *
    * @param int $page
@@ -29,7 +47,7 @@ class Newsroom {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getPage($page = 0) {
-    $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    $query = $this->entityTypeManager->getStorage('node')->getQuery()
       ->condition('type', 'localgov_news_article')
       ->condition('status', Node::PUBLISHED)
       ->range($page * self::TOTAL_PER_PAGE, self::TOTAL_PER_PAGE)
@@ -40,7 +58,7 @@ class Newsroom {
     }
     $result = $query->execute();
 
-    return \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($result);
+    return $this->entityTypeManager->getStorage('node')->loadMultiple($result);
   }
 
   /**
@@ -50,7 +68,7 @@ class Newsroom {
    *   Number of nodes to display.
    */
   public function getCount() {
-    $query = \Drupal::entityQuery('node')
+    $query = $this->entityTypeManager->getStorage('node')->getQuery()
       ->condition('type', 'localgov_news_article')
       ->condition('status', Node::PUBLISHED);
     $exclude_nodes = $this->excludeNodes();
@@ -88,14 +106,14 @@ class Newsroom {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function loadNewsroom() {
-    $query = \Drupal::entityQuery('node')
+    $query = $this->entityTypeManager->getStorage('node')->getQuery()
       ->condition('type', 'localgov_newsroom')
       ->condition('status', Node::PUBLISHED)
       ->sort('created', 'DESC')
       ->execute();
     $query = reset($query);
 
-    return \Drupal::entityTypeManager()->getStorage('node')->load($query);
+    return $this->entityTypeManager->getStorage('node')->load($query);
   }
 
 }

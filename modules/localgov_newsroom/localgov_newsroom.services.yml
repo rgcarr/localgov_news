@@ -1,6 +1,7 @@
 services:
   localgov_newsroom.newsroom:
     class: Drupal\localgov_newsroom\Newsroom
+    arguments: ['@entity_type.manager']
 
   localgov_newsroom.block_repository:
     class: Drupal\block\BlockRepository
