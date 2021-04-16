@@ -1,4 +1,4 @@
-name: Test LocalGov Drupal Demo
+name: Test LocalGov Drupal News
 
 on:
   push:
