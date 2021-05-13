@@ -1,12 +1,12 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - media
-    - node
   enforced:
     module:
       - localgov_news
+  module:
+    - media
+    - node
 id: node.localgov_news_default_image
 field_name: localgov_news_default_image
 entity_type: node

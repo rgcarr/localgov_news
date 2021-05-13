@@ -16,7 +16,6 @@ dependencies:
   module:
     - datetime
     - entity_reference_facet_link
-    - field_formatter_class
     - text
     - user
 id: node.localgov_news_article.default

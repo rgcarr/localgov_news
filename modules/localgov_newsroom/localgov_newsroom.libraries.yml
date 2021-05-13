@@ -1,9 +1,13 @@
 infinite_scroll:
-  version: VERSION
   js:
     js/infinite-scroll.js: {}
-localgov-featured-news:
-  version: 1.x
+
+localgov-newsroom:
   css:
     theme:
-      css/localgov-featured-news.css: {}
+      css/localgov-newsroom.css: {}
+
+localgov-newsroom-featured:
+  css:
+    theme:
+      css/localgov-newsroom-featured.css: {}

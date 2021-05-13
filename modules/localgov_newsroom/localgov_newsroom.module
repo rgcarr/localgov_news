@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Url;
+use Drupal\localgov_newsroom\Newsroom;
 
 /**
  * Implements hook_theme().
@@ -23,6 +24,7 @@ function localgov_newsroom_theme() {
       'render element' => 'block',
       'variables' => [
         'content' => [],
+        'totalPerPage' => Newsroom::TOTAL_PER_PAGE,
         'displayShowMore' => TRUE,
         'ajax_callback_route' => '',
       ],

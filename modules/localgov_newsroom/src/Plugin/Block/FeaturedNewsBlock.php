@@ -51,11 +51,6 @@ class FeaturedNewsBlock extends NewsAbstractBlockBase {
     $build[] = [
       '#theme' => 'localgov_featured_news_block',
       '#featured' => $featured,
-      '#attached' => [
-        'library' => [
-          'localgov_newsroom/localgov-featured-news',
-        ],
-      ],
     ];
 
     return $build;

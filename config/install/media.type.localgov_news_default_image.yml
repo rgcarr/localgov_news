@@ -1,11 +1,11 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - crop
   enforced:
     module:
       - localgov_news
+  module:
+    - crop
 third_party_settings:
   crop:
     image_field: field_media_image

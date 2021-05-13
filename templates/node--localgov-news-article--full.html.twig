@@ -77,11 +77,11 @@
   view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
 ]
 %}
-
+{{ attach_library('localgov_news/localgov-news-full') }}
 <article{{ attributes.addClass(classes) }}>
 
   <div class="news-article__metadata">
-    <time datetime="{{ node.localgov_news_date.value }}" class="news-article__metadata-item news-article__metadata--date">
+    <time datetime="{{ node.localgov_news_date.value }}" class="news-article__metadata-item news-article__metadata-item--date">
       {{ content.localgov_news_date }}
     </time>
     {% if not node.localgov_news_categories.isEmpty() %}
@@ -100,7 +100,11 @@
   </h1>
 
   <div{{ content_attributes.addClass('news-article__content node__content') }}>
-    {{ content|without('localgov_news_date', 'localgov_news_categories') }}
+    {{ content|without('localgov_news_date', 'localgov_news_categories', 'localgov_news_related') }}
+    {% if node.localgov_news_related.value %}
+      <h2>{{ 'Related news'|t }}</h2>
+      {{ content.localgov_news_related }}
+    {% endif %}
   </div>
 
 </article>

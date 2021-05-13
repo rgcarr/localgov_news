@@ -8,10 +8,7 @@ dependencies:
     module:
       - localgov_newsroom
   module:
-    - entity_reference_revisions
     - path
-_core:
-  default_config_hash: jvvgVRZ6KeyN30k0rvDr4pZh-k7vk6MkwGbSp2zFLNo
 id: node.localgov_newsroom.default
 targetEntityType: node
 bundle: localgov_newsroom

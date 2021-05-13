@@ -70,19 +70,38 @@
 #}
 {%
   set classes = [
+  'teaser',
+  'teaser--' ~ node.bundle|clean_class,
   'node',
   'node--type-' ~ node.bundle|clean_class,
   not node.isPublished() ? 'node--unpublished',
   view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
 ]
 %}
+{{ attach_library('localgov_news/localgov-news-teaser') }}
 <article{{ attributes.addClass(classes) }}>
-    {{ content.localgov_news_image }}
-  <div{{ content_attributes.addClass('node__content') }}>
-    <h3>
+
+  {% if node.localgov_news_image.value %}
+    <div class="teaser__image">
+      {{ content.localgov_news_image }}
+    </div>
+  {% endif %}
+
+  <div{{ content_attributes.addClass('teaser__content', 'node__content') }}>
+
+    <h3 class="teaser__title">
       <a href="{{ url }}">{{ label }}</a>
     </h3>
-    <p>{{ node.body.summary }}</p>
-    <div class="localgov_news_date">{{ content.localgov_news_date }}</div>
+
+    <div class="teaser__body">
+      {{ content|without('localgov_news_image', 'localgov_news_date') }}
+    </div>
+
+    <div class="teaser__metadata">
+      <time datetime="{{ node.localgov_news_date.value }}" class="teaser__metadata-item">
+        {{ content.localgov_news_date }}
+      </time>
+    </div>
+
   </div>
 </article>

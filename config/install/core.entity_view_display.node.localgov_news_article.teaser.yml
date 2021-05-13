@@ -9,14 +9,12 @@ dependencies:
     - field.field.node.localgov_news_article.localgov_news_default_image
     - field.field.node.localgov_news_article.localgov_news_image
     - field.field.node.localgov_news_article.localgov_news_related
-    - image.style.localgov_newsroom_teaser
     - node.type.localgov_news_article
   enforced:
     module:
       - localgov_news
   module:
     - datetime
-    - media
     - text
     - user
 id: node.localgov_news_article.teaser
@@ -42,13 +40,13 @@ content:
       date_format: 'j F Y'
     third_party_settings: {  }
   localgov_news_image:
-    type: media_thumbnail
+    type: entity_reference_entity_view
     weight: 1
     region: content
     label: hidden
     settings:
-      image_style: localgov_newsroom_teaser
-      image_link: content
+      view_mode: localgov_newsroom_teaser
+      link: false
     third_party_settings: {  }
 hidden:
   links: true
