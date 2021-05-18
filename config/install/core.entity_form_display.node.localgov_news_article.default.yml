@@ -3,10 +3,9 @@ status: true
 dependencies:
   config:
     - field.field.node.localgov_news_article.body
+    - field.field.node.localgov_news_article.field_media_image
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
-    - field.field.node.localgov_news_article.localgov_news_default_image
-    - field.field.node.localgov_news_article.localgov_news_image
     - field.field.node.localgov_news_article.localgov_news_related
     - node.type.localgov_news_article
   enforced:
@@ -38,7 +37,6 @@ third_party_settings:
     group_about_the_story:
       children:
         - title
-        - localgov_news_summary
         - localgov_news_date
         - localgov_news_categories
       parent_name: group_tabs
@@ -54,8 +52,7 @@ third_party_settings:
       label: 'About the story'
     group_image:
       children:
-        - localgov_news_default_image
-        - localgov_news_image
+        - field_media_image
       parent_name: group_tabs
       weight: 5
       format_type: tab
@@ -105,9 +102,9 @@ content:
     weight: 3
     settings:
       rows: 9
-      summary_rows: 3
       placeholder: ''
-      show_summary: false
+      summary_rows: 3
+      show_summary: true
     third_party_settings: {  }
     region: content
   created:
@@ -116,11 +113,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  localgov_news_summary:
-    weight: 1
-    region: content
-    settings: {  }
+  field_media_image:
+    weight: 26
+    settings:
+      media_types: {  }
     third_party_settings: {  }
+    type: media_library_widget
+    region: content
   localgov_news_categories:
     weight: 3
     settings:
@@ -137,19 +136,6 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
-  localgov_news_default_image:
-    type: options_select
-    weight: 8
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  localgov_news_image:
-    type: media_library_widget
-    weight: 9
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
-    region: content
   localgov_news_related:
     weight: 8
     settings:
@@ -160,6 +146,11 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  localgov_news_summary:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   path:
     type: path
     weight: 6

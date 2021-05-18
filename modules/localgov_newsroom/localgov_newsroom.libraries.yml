@@ -1,11 +1,7 @@
-infinite_scroll:
-  js:
-    js/infinite-scroll.js: {}
-
-localgov-newsroom:
+localgov-news-list:
   css:
     theme:
-      css/localgov-newsroom.css: {}
+      css/localgov-news-list.css: {}
 
 localgov-newsroom-featured:
   css:

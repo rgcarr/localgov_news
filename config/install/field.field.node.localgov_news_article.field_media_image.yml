@@ -2,20 +2,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.localgov_news_image
+    - field.storage.node.field_media_image
     - media.type.image
     - node.type.localgov_news_article
-  enforced:
-    module:
-      - localgov_news
-id: node.localgov_news_article.localgov_news_image
-field_name: localgov_news_image
+id: node.localgov_news_article.field_media_image
+field_name: field_media_image
 entity_type: node
 bundle: localgov_news_article
 label: Image
-description: 'Add or select an image for the news article.'
-required: false
-translatable: false
+description: ''
+required: true
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

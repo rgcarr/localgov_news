@@ -4,10 +4,9 @@ dependencies:
   config:
     - facets.facet.localgov_news_category
     - field.field.node.localgov_news_article.body
+    - field.field.node.localgov_news_article.field_media_image
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
-    - field.field.node.localgov_news_article.localgov_news_default_image
-    - field.field.node.localgov_news_article.localgov_news_image
     - field.field.node.localgov_news_article.localgov_news_related
     - node.type.localgov_news_article
   enforced:
@@ -62,6 +61,5 @@ content:
     type: entity_reference_entity_view
     region: content
 hidden:
-  localgov_news_default_image: true
-  localgov_news_image: true
+  field_media_image: true
   search_api_excerpt: true

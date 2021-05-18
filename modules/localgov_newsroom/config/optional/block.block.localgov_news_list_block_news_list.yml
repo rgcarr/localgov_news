@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.localgov_news_list
+  module:
+    - system
+    - views
+  theme:
+    - localgov_theme
+id: localgov_news_list_block_news_list
+theme: localgov_theme
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:localgov_news_list-block_news_list'
+settings:
+  id: 'views_block:localgov_news_list-block_news_list'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: /news
+    negate: false
+    context_mapping: {  }

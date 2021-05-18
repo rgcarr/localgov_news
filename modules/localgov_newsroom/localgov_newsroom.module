@@ -5,8 +5,8 @@
  * LocalGov Drupal News: Newsroom module file.
  */
 
-use Drupal\Core\Url;
-use Drupal\localgov_newsroom\Newsroom;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().
@@ -20,24 +20,24 @@ function localgov_newsroom_theme() {
       'render element' => 'block',
       'template' => 'localgov-featured-news-block',
     ],
-    'infinite_scroll' => [
-      'render element' => 'block',
-      'variables' => [
-        'content' => [],
-        'totalPerPage' => Newsroom::TOTAL_PER_PAGE,
-        'displayShowMore' => TRUE,
-        'ajax_callback_route' => '',
-      ],
-    ],
   ];
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_views_query_alter
  */
-function localgov_newsroom_preprocess_infinite_scroll(&$variables) {
-  $url = Url::fromRoute($variables['ajax_callback_route']);
+function localgov_newsroom_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'localgov_news_list') {
+    $block_manager = \Drupal::service('plugin.manager.block');
+    $block_plugin = $block_manager->createInstance('localgov_featured_news_block');
+    $ids = $block_plugin->getDisplayNewsIds();
 
-  $variables['#attached']['library'][] = 'localgov_newsroom/infinite_scroll';
-  $variables['#attached']['drupalSettings']['infiniteScroll']['callbackUrl'] = $url->toString();
+    if (!empty($ids) && !empty($query->where[1]['conditions'])) {
+      $query->where[1]['conditions'][] = [
+        'field' => 'node_field_data.nid',
+        'value' => $ids,
+        'operator' => 'not in',
+      ];
+    }
+  }
 }

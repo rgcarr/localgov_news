@@ -81,9 +81,9 @@
 {{ attach_library('localgov_news/localgov-news-teaser') }}
 <article{{ attributes.addClass(classes) }}>
 
-  {% if node.localgov_news_image.value %}
+  {% if node.field_media_image.value %}
     <div class="teaser__image">
-      {{ content.localgov_news_image }}
+      {{ content.field_media_image }}
     </div>
   {% endif %}
 
@@ -94,7 +94,7 @@
     </h3>
 
     <div class="teaser__body">
-      {{ content|without('localgov_news_image', 'localgov_news_date') }}
+      {{ content|without('field_media_image', 'localgov_news_date') }}
     </div>
 
     <div class="teaser__metadata">

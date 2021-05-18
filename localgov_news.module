@@ -5,9 +5,6 @@
  * LocalGov Drupal news article module file.
  */
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\media\Entity\Media;
-
 /**
  * Implements hook_theme().
  */
@@ -25,123 +22,8 @@ function localgov_news_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_form_alter().
- */
-function localgov_news_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-
-  if (in_array($form_id, ['node_localgov_news_article_form', 'node_localgov_news_article_edit_form'])) {
-
-    // Add our custom summary widget.
-    $bodyWidget = reset($form['body']['widget']);
-    $form['localgov_news_summary'] = $bodyWidget['summary'];
-    $form['localgov_news_summary']['#description'] = '<p>' . t('Full sentences and around 160 characters.') . '</p>';
-    $form['localgov_news_summary']['#required'] = TRUE;
-    unset($form['body']['widget'][0]['summary']);
-
-    // Custom validator to handle image.
-    $form['#validate'][] = '_localgov_news_node_form_validate';
-
-    // Custom submit handler to handle summary and image.
-    $form['actions']['submit']['#submit'][] = '_localgov_news_node_form_submit';
-  }
-}
-
-/**
- * Custom news node validation handler.
- *
- * @param array $form
- *   News article form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   News article form state.
- */
-function _localgov_news_node_form_validate(array &$form, FormStateInterface $form_state) {
-
-  // Get the Form values.
-  $formValues = $form_state->getValues();
-
-  // Get any set default image media ID.
-  $defaultImageMid = _localgov_news_fetch_selected_media($formValues['localgov_news_default_image']);
-
-  // Replace the thumbnail if a default image is chosen and thumbnail is blank.
-  if (empty($defaultImageMid) && empty($formValues['localgov_news_image']['selection'])) {
-    $form_state->setErrorByName('localgov_news_default_image', t('You must choose an image or upload a new one.'));
-  }
-}
-
-/**
- * Custom news article submit handler.
- *
- * @param array $form
- *   News article form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   News article form state.
- */
-function _localgov_news_node_form_submit(array &$form, FormStateInterface $form_state) {
-
-  // Get the form values.
-  $formValues = $form_state->getValues();
-
-  // Set body field to the custom summary field value.
-  $localgovNewsSummary = $formValues['localgov_news_summary'];
-  $body = reset($formValues['body']);
-  $body['summary'] = $localgovNewsSummary;
-
-  // Save the modified body field.
-  $node = $form_state->getFormObject()->getEntity();
-  $node->get('body')->setValue($body);
-
-  // Set the thumbnail to the default news image if selected.
-  $defaultImageMid = _localgov_news_fetch_selected_media($formValues['localgov_news_default_image']);
-
-  // Replace the thumbnail if a default image is chosen and thumbnail is blank.
-  if (!empty($defaultImageMid) && empty($formValues['localgov_news_image']['selection'])) {
-    $media = Media::load($defaultImageMid);
-    $node->get('localgov_news_image')->setValue($media);
-    // $node->get('localgov_news_image')->first()->get('alt')->setValue($media->field_media_image->alt);
-  }
-
-  // Save the node.
-  $node->save();
-}
-
-/**
- * Fetch selected media input.
- *
- *  Get the media element.
- *  This check is to support media library
- *  (which has selection key) and select widgets.
- *
- * @param array $fieldNewsDefaultImage
- *   Form Value of field_news_default_image.
- *
- * @return Mixed
- *   Media ID, or null if empty
- */
-function _localgov_news_fetch_selected_media(array $fieldNewsDefaultImage) {
-
-  $defaultNewsImage = !empty($fieldNewsDefaultImage['selection']) ? reset($fieldNewsDefaultImage['selection']) : reset($fieldNewsDefaultImage);
-  $defaultImageMid = !empty($defaultNewsImage['target_id']) ? $defaultNewsImage['target_id'] : NULL;
-
-  return $defaultImageMid;
-}
-
-/**
- * Implements hook_entity_extra_field_info().
- */
-function localgov_news_entity_extra_field_info() {
-
-  // Add summary pseudo field to form display.
-  $extra_field['node']['news']['form']['localgov_news_summary'] = [
-    'label' => t('Summary'),
-    'weight' => 0,
-    'visible' => TRUE,
-  ];
-
-  return $extra_field;
-}
-
-/**
  * Implements hook_tokens_alter().
+ * Needed to correctly render schema metadata for categories containing commas
  */
 function localgov_news_tokens_alter(&$replacements, $context) {
   // Remove commas in news categories so they are not split.

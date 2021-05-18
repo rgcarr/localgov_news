@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - localgov_news
 id: node__localgov_news_article
 label: 'Content: News article'
 tags:
@@ -11,7 +14,7 @@ tags:
   schema_article_description: '[node:summary]'
   schema_article_has_part: 'a:2:{s:5:"@type";s:14:"WebPageElement";s:19:"isAccessibleForFree";s:4:"True";}'
   schema_article_headline: '[node:title]'
-  schema_article_image: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:51:"[node:localgov_news_image:entity:field_media_image]";s:5:"width";s:57:"[node:localgov_news_image:entity:field_media_image:width]";s:6:"height";s:58:"[node:localgov_news_image:entity:field_media_image:height]";}'
+  schema_article_image: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:49:"[node:field_media_image:entity:field_media_image]";s:5:"width";s:55:"[node:field_media_image:entity:field_media_image:width]";s:6:"height";s:56:"[node:field_media_image:entity:field_media_image:height]";}'
   schema_article_is_accessible_for_free: 'True'
   schema_article_main_entity_of_page: '[node:url]'
   schema_article_name: '[node:title]'

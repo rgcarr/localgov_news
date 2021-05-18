@@ -24,15 +24,8 @@ class FeaturedNewsBlock extends NewsAbstractBlockBase {
    */
   public function build() {
     $build = [];
-    $promotedNewsIds = [];
 
-    $featuredNewsIds = $this->getFeaturedNews();
-
-    if (count($featuredNewsIds) < self::MAX_FEATURED_ARTICLES) {
-      $promotedNewsIds = $this->getPromotedNews($featuredNewsIds, self::MAX_FEATURED_ARTICLES);
-    }
-
-    $displayNewsIds = array_merge($featuredNewsIds, $promotedNewsIds);
+    $displayNewsIds = $this->getDisplayNewsIds();
 
     // Prevent rendering if no news is featured or promoted.
     if (empty($displayNewsIds)) {
@@ -57,10 +50,29 @@ class FeaturedNewsBlock extends NewsAbstractBlockBase {
   }
 
   /**
-   * Get the nids for any featured news articles in this newsroom.
+   *
    */
-  private function getFeaturedNews() {
-    return (array_column($this->newsroom->loadNewsroom()->get('localgov_newsroom_featured')->getValue(), 'target_id'));
+  public function getDisplayNewsIds() {
+    $promotedNewsIds = [];
+
+    $featuredNewsIds = $this->getFeaturedNews();
+
+    if (count($featuredNewsIds) < self::MAX_FEATURED_ARTICLES) {
+      $promotedNewsIds = $this->getPromotedNews($featuredNewsIds, self::MAX_FEATURED_ARTICLES);
+    }
+
+    return array_merge($featuredNewsIds, $promotedNewsIds);
+  }
+
+  /**
+   * Get featured news articles in this newsroom.
+   * @return array
+   *   List of ids for featured news articles.
+   */
+  public function getFeaturedNews() {
+    if ($this->newsroom) {
+      return (array_column($this->newsroom->loadNewsroom()->get('localgov_newsroom_featured')->getValue(), 'target_id'));
+    }
   }
 
   /**
@@ -75,7 +87,7 @@ class FeaturedNewsBlock extends NewsAbstractBlockBase {
    * @return array
    *   List of promoted news article ids to include.
    */
-  private function getPromotedNews(array $excludeNids, $limit) {
+  public function getPromotedNews(array $excludeNids, $limit) {
     $promotedNewsQuery = $this->entityTypeManager->getStorage('node')->getQuery();
     $promotedNewsQuery->condition('type', 'localgov_news_article')
       ->condition('promote', 1)
@@ -89,5 +101,4 @@ class FeaturedNewsBlock extends NewsAbstractBlockBase {
     $promotedNewsIds = $promotedNewsQuery->execute();
     return $promotedNewsIds;
   }
-
 }
