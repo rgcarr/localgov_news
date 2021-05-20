@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
     - field.field.node.localgov_news_article.localgov_news_related
+    - field.field.node.localgov_news_article.localgov_newsroom
     - node.type.localgov_news_article
   enforced:
     module:
@@ -38,6 +39,7 @@ third_party_settings:
       children:
         - title
         - localgov_news_date
+        - localgov_newsroom
         - localgov_news_categories
       parent_name: group_tabs
       weight: 4
@@ -121,7 +123,7 @@ content:
     type: media_library_widget
     region: content
   localgov_news_categories:
-    weight: 3
+    weight: 4
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -151,6 +153,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  localgov_newsroom:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
   path:
     type: path
     weight: 6

@@ -5,7 +5,7 @@ type: module
 package: LocalGov Drupal
 
 dependencies:
-  - drupal:content_moderation
+  - drupal:datetime
   - drupal:field
   - drupal:link
   - drupal:menu_ui

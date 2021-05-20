@@ -1,9 +1,0 @@
-localgov-news-list:
-  css:
-    theme:
-      css/localgov-news-list.css: {}
-
-localgov-newsroom-featured:
-  css:
-    theme:
-      css/localgov-newsroom-featured.css: {}

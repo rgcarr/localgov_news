@@ -9,16 +9,16 @@ dependencies:
 id: localgov_news
 label: News
 type: 'canonical_entities:node'
-pattern: 'news/[node:localgov_news_date:date:html_year]/[node:title]'
+pattern: '[node:localgov_newsroom:entity:url:relative]/[node:localgov_news_date:date:html_year]/[node:title]'
 selection_criteria:
-  9eebc2f2-8d73-4fe6-9149-fc6eda6e8a18:
+  fa93e7c4-4c6f-4ed1-988b-ce660e1d6292:
     id: node_type
     bundles:
       localgov_news_article: localgov_news_article
     negate: false
     context_mapping:
       node: node
-    uuid: 9eebc2f2-8d73-4fe6-9149-fc6eda6e8a18
+    uuid: fa93e7c4-4c6f-4ed1-988b-ce660e1d6292
 selection_logic: and
 weight: -5
 relationships: {  }

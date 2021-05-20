@@ -6,7 +6,7 @@ dependencies:
     - node.type.localgov_newsroom
   enforced:
     module:
-      - localgov_newsroom
+      - localgov_news
   module:
     - path
 id: node.localgov_newsroom.default

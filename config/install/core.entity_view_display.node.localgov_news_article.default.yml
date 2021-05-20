@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
     - field.field.node.localgov_news_article.localgov_news_related
+    - field.field.node.localgov_news_article.localgov_newsroom
     - node.type.localgov_news_article
   enforced:
     module:
@@ -62,4 +63,5 @@ content:
     region: content
 hidden:
   field_media_image: true
+  localgov_newsroom: true
   search_api_excerpt: true

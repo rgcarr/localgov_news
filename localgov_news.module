@@ -5,6 +5,15 @@
  * LocalGov Drupal news article module file.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\localgov_news\FeaturedNewsHelper;
+use Drupal\node\NodeInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\ViewExecutable;
+
 /**
  * Implements hook_theme().
  */
@@ -30,6 +39,68 @@ function localgov_news_tokens_alter(&$replacements, $context) {
   if ($context['type'] == 'node') {
     if (isset($replacements['[node:localgov_news_categories:0:entity]'])) {
       $replacements['[node:localgov_news_categories:0:entity]'] = stripslashes(str_replace(',', '', $replacements['[node:localgov_news_categories:0:entity]']));
+    }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter
+ */
+function localgov_news_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'localgov_news_list' && $query instanceof Sql) {
+    \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(FeaturedNewsHelper::class)
+      ->alterFeaturedNewsCondition($view, $query);
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function localgov_news_entity_extra_field_info() {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(FeaturedNewsHelper::class)
+    ->entityExtraFieldInfo();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function localgov_news_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(FeaturedNewsHelper::class)
+    ->nodeView($build, $node, $display, $view_mode);
+}
+
+/**
+ * Implements hook_field_widget_multivalue_form_alter().
+ */
+function localgov_news_field_widget_multivalue_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  // If the localgov_newsroom field only has one newsroom to choose, just select
+  // it and hide the field.
+  $field_definition = $context['items']->getFieldDefinition();
+  if ($field_definition->getName() == 'localgov_newsroom' && isset($elements['#options'])) {
+    $options = $elements['#options'];
+    unset($options['_none']);
+    if (count($options) == 1) {
+      $elements['#value'] = key($options);
+      $elements['#type'] = 'value';
+    }
+  }
+
+  // Restrict the featured articles to articles in the newsroom.
+  // A more durable, and transparent, way of doing this will be to add a custom
+  // handler.
+  // This is presently just restricting the search query and not the field
+  // itself.
+  if ($field_definition->getName() == 'localgov_newsroom_featured') {
+    if ($form_state->getFormObject() instanceOf EntityFormInterface) {
+      $nid = $form_state->getformObject()->getEntity()->id();
+    }
+    foreach ($elements as $delta => $element) {
+      if (!empty($element['target_id']) && $element['target_id']['#selection_handler'] == 'views') {
+        $elements[$delta]['target_id']['#selection_settings']['view']['arguments'] = [$nid];
+      }
     }
   }
 }

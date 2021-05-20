@@ -43,7 +43,6 @@ class NewsSearchTest extends BrowserTestBase {
    */
   public static $modules = [
     'localgov_news',
-    'localgov_newsroom',
   ];
 
   /**
