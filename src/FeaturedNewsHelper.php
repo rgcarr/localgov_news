@@ -6,6 +6,7 @@ use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 use Drupal\views\Plugin\views\query\Sql;
@@ -69,6 +70,12 @@ class FeaturedNewsHelper implements ContainerInjectionInterface {
       'weight' => -20,
       'visible' => TRUE,
     ];
+    $fields['node']['localgov_newsroom']['display']['localgov_news_facets'] = [
+      'label' => $this->t('News facets'),
+      'description' => $this->t("Output facets block, field alternative to enabling the block."),
+      'weight' => -20,
+      'visible' => TRUE,
+    ];
 
     return $fields;
   }
@@ -88,6 +95,9 @@ class FeaturedNewsHelper implements ContainerInjectionInterface {
     }
     if ($display->getComponent('localgov_news_search')) {
       $build['localgov_news_search'] = $this->getSearchBlock();
+    }
+    if ($display->getComponent('localgov_news_facets')) {
+      $build['localgov_news_facets'] = $this->getFacetsBlock();
     }
   }
 
@@ -164,6 +174,24 @@ class FeaturedNewsHelper implements ContainerInjectionInterface {
   protected function getSearchBlock() {
     $block = $this->blockManager->createInstance('views_exposed_filter_block:localgov_news_search-page_search_news');
     return $block->build();
+  }
+
+  /**
+   * Retrieves the news facets blocks.
+   */
+  protected function getFacetsBlock() {
+    $blocks = [];
+
+    $block = $this->blockManager->createInstance('facet_block' . PluginBase::DERIVATIVE_SEPARATOR . 'localgov_news_category');
+    if ($block) {
+      $blocks[] = $block->build();
+    }
+    $block = $this->blockManager->createInstance('facet_block' . PluginBase::DERIVATIVE_SEPARATOR . 'localgov_news_date');
+    if ($block) {
+      $blocks[] = $block->build();
+    }
+
+    return $blocks;
   }
 
   /**
