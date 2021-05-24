@@ -2,17 +2,11 @@ name: Test LocalGov Drupal News
 
 on:
   push:
-<<<<<<< HEAD
     branches:
       - '1.x'
   pull_request:
     branches:
       - '1.x'
-=======
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
->>>>>>> 1.x
 
 jobs:
 
@@ -20,7 +14,6 @@ jobs:
     name: Install LocalGov Drupal
     runs-on: ubuntu-latest
 
-<<<<<<< HEAD
     strategy:
       fail-fast: false
       matrix:
@@ -33,29 +26,6 @@ jobs:
             php-version: "7.4"
 
     steps:
-=======
-    steps:
-
-      - name: Cached workspace
-        uses: actions/cache@v2
-        with:
-          path: ./html
-          key: ${{ runner.os }}-localgov-build-${{ github.run_id }}
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-
-      - name: Clone drupal_container
-        uses: actions/checkout@v2
-        with:
-          repository: localgovdrupal/drupal-container
-          ref: master
-
-      - name: Create LocalGov Drupal project
-        run: composer create-project --stability dev localgovdrupal/localgov-project ./html
->>>>>>> 1.x
 
       - name: Save git branch and git repo names to env if this is not a pull request
         if: github.event_name != 'pull_request'
@@ -108,18 +78,13 @@ jobs:
           composer global config github-oauth.github.com ${{ github.token }}
 
       - name: Obtain the test target from the repo that triggered this workflow
-<<<<<<< HEAD
         run: composer --working-dir=html require --with-all-dependencies localgovdrupal/${{ github.event.repository.name }}:"${COMPOSER_REF} as ${GIT_BASE%'.x'}"
-=======
-        run: composer --working-dir=html require --with-all-dependencies localgovdrupal/${{ github.event.repository.name }}:"dev-${GIT_BRANCH} as 1.0.x-dev"
->>>>>>> 1.x
 
   phpcs:
     name: Coding standards checks
     needs: build
     runs-on: ubuntu-latest
 
-<<<<<<< HEAD
     strategy:
       fail-fast: false
       matrix:
@@ -131,23 +96,15 @@ jobs:
             drupal-version: "~9.1"
             php-version: "7.4"
 
-=======
->>>>>>> 1.x
     steps:
 
       - name: Cached workspace
         uses: actions/cache@v2
         with:
           path: ./html
-<<<<<<< HEAD
           key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
-=======
-          key: ${{ runner.os }}-localgov-build-${{ github.run_id }}
-          restore-keys: |
-            ${{ runner.os }}-localgov-build-
->>>>>>> 1.x
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -164,7 +121,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-<<<<<<< HEAD
     strategy:
       fail-fast: false
       matrix:
@@ -176,23 +132,15 @@ jobs:
             drupal-version: "~9.1"
             php-version: "7.4"
 
-=======
->>>>>>> 1.x
     steps:
 
       - name: Cached workspace
         uses: actions/cache@v2
         with:
           path: ./html
-<<<<<<< HEAD
           key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
-=======
-          key: ${{ runner.os }}-localgov-build-${{ github.run_id }}
-          restore-keys: |
-            ${{ runner.os }}-localgov-build-
->>>>>>> 1.x
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -209,7 +157,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-<<<<<<< HEAD
     strategy:
       fail-fast: false
       matrix:
@@ -221,8 +168,6 @@ jobs:
             drupal-version: "~9.1"
             php-version: "7.4"
 
-=======
->>>>>>> 1.x
     steps:
 
       - name: Clone drupal_container
@@ -235,15 +180,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-<<<<<<< HEAD
           key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
-=======
-          key: ${{ runner.os }}-localgov-build-${{ github.run_id }}
-          restore-keys: |
-            ${{ runner.os }}-localgov-build-
->>>>>>> 1.x
 
       - name: Start Docker environment
         run: docker-compose -f docker-compose.yml up -d
