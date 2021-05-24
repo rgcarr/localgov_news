@@ -55,7 +55,7 @@ class FeaturedNewsHelper implements ContainerInjectionInterface {
    *
    * @param Drupal\views\ViewExecutable $view
    *   The 'localgov_news_list' view.
-   * @param Drupal\views\Plugin\views\query\QueryPluginBase $query
+   * @param Drupal\views\Plugin\views\query\Sql $query
    *   The query to be altered.
    *
    * @see localgov_news_views_query_alter()
