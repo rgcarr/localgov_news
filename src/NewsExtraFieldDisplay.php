@@ -5,8 +5,10 @@ namespace Drupal\localgov_news;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeForm;
 use Drupal\node\NodeInterface;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -77,13 +79,19 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
       'visible' => TRUE,
     ];
 
+    $fields['node']['localgov_news_article']['form']['localgov_news_newsroom_promote'] = [
+      'label' => $this->t('Promote on newsroom'),
+      'description' => $this->t("Add to directly to promoted news list in the newsroom."),
+      'weight' => 1,
+      'visible' => TRUE,
+    ];
     return $fields;
   }
 
   /**
    * Adds view with arguments to view render array if required.
    *
-   * @see localgov_newsroom_node_view()
+   * @see localgov_news_node_view()
    */
   public function nodeView(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
     // Add view if enabled.
@@ -99,6 +107,122 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
     if ($display->getComponent('localgov_news_facets')) {
       $build['localgov_news_facets'] = $this->getFacetsBlock();
     }
+  }
+
+  /**
+   * Adds promote form field.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param string $form_id
+   *   The form id.
+   *
+   * @see localgov_news_form_alter()
+   */
+  public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
+    if (
+      ($form_display = $form_state->get('form_display')) &&
+      ($form_display->getComponent('localgov_news_newsroom_promote'))
+    ) {
+      $form['localgov_news_newsroom_promote'] = [
+        '#title' => $this->t('Promote on newsroom'),
+        '#type' => 'checkbox',
+        '#description' => $this->t("Add to promoted news in the newsroom. If there is already the maximum number of promoted news items the last will be removed to make space."),
+        '#default_value' => self::articlePromotedStatus($form_state->getFormObject()),
+        '#states' => [
+          'visible' => [
+            ":input[name='status[value]']" => [
+              'checked' => TRUE,
+            ],
+          ],
+        ],
+      ];
+      $form['actions']['submit']['#submit'][] = [self::class, 'articleSubmit'];
+    }
+  }
+
+  /**
+   * Submission handler node submit with promote extra field.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @see ::formAlter()
+   */
+  public static function articleSubmit(array $form, FormStateInterface $form_state) {
+    if (
+      $form_state->getValue('status') &&
+      ($form_object = $form_state->getFormObject()) &&
+      ($form_object instanceof NodeForm) &&
+      ($article = $form_object->getEntity()) &&
+      ($newsroom = $article->localgov_newsroom->entity)
+    ) {
+      $to_promote = $form_state->getValue('localgov_news_newsroom_promote');
+      $is_promoted = self::articlePromotedStatus($form_object);
+      if ($to_promote != $is_promoted) {
+        if ($to_promote) {
+          self::articleSetNewsroomPromote($newsroom, $article);
+        }
+        else {
+          self::articleUnsetNewsroomPromote($newsroom, $article);
+        }
+      }
+    }
+  }
+
+  /**
+   * Check for NodeForm Entity article and if it is promoted in Newsroom.
+   *
+   * @param \Drupal\node\NodeForm $form_object
+   *   Node form object.
+   *
+   * @return bool
+   *   TRUE if there is an article and it is promoted on newsroom.
+   */
+  public static function articlePromotedStatus(NodeForm $form_object) {
+    if (
+      ($article = $form_object->getEntity()) &&
+      ($newsroom = $article->localgov_newsroom->entity)
+    ) {
+      $featured_nids = array_column($newsroom->localgov_newsroom_featured->getValue(), 'target_id');
+      return in_array($article->id(), $featured_nids);
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Add article to promoted in newsroom.
+   *
+   * @param \Drupal\node\NodeInterface $newsroom
+   *   Newsroom node.
+   * @param \Drupal\node\NodeInterface $article
+   *   Article node.
+   */
+  public static function articleSetNewsroomPromote(NodeInterface $newsroom, NodeInterface $article) {
+    $references = $newsroom->localgov_newsroom_featured->getValue();
+    array_unshift($references, ['target_id' => $article->id()]);
+    $newsroom->localgov_newsroom_featured->setValue($references);
+    $newsroom->save();
+  }
+
+  /**
+   * Remove article from promoted in newsroom.
+   *
+   * @param \Drupal\node\NodeInterface $newsroom
+   *   Newsroom node.
+   * @param \Drupal\node\NodeInterface $article
+   *   Article node.
+   */
+  public static function articleUnsetNewsroomPromote(NodeInterface $newsroom, NodeInterface $article) {
+    $references = $newsroom->localgov_newsroom_featured->getValue();
+    $position = array_search(['target_id' => $article->id()], $references);
+    $newsroom->localgov_newsroom_featured->removeItem($position);
+    $newsroom->save();
   }
 
   /**
