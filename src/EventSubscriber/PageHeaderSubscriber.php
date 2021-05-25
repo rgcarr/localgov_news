@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\localgov_core\Event\PageHeaderDisplayEvent;
 
 /**
- * Class PageHeaderSubscriber.
+ * Alters the Local Gov Page header.
  *
  * @package Drupal\localgov_news\EventSubscriber
  */

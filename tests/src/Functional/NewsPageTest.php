@@ -104,7 +104,7 @@ class NewsPageTest extends BrowserTestBase {
     ], 'Save');
     $newsroom = $this->getNodeByTitle('News');
     $article = $this->getNodeByTitle('News article');
-    $this->assertEqual($article->localgov_newsroom->target_id, $newsroom->id());
+    $this->assertEquals($article->localgov_newsroom->target_id, $newsroom->id());
 
     // Second newsroom.
     $newsroom_2 = $this->createNode([
@@ -124,7 +124,7 @@ class NewsPageTest extends BrowserTestBase {
     ], 'Save');
     $this->nodeStorage->resetCache();
     $article = $this->nodeStorage->load($article->id());
-    $this->assertEqual($article->localgov_newsroom->target_id, $newsroom_2->id());
+    $this->assertEquals($article->localgov_newsroom->target_id, $newsroom_2->id());
   }
 
   /**
@@ -227,8 +227,8 @@ class NewsPageTest extends BrowserTestBase {
     ]);
     // News is the default path of the default $newsroom.
     $this->drupalGet('news/' . date('Y') . '/news-article-1');
-    $this->assertText('News article 1');
-    $this->assertText($body);
+    $this->assertSession()->pageTextContains('News article 1');
+    $this->assertSession()->pageTextContains($body);
     $this->drupalGet('news');
     $this->assertSession()->elementContains('css', 'div.view--teasers', 'News article 1');
 
@@ -239,8 +239,8 @@ class NewsPageTest extends BrowserTestBase {
       'status' => NodeInterface::PUBLISHED,
     ]);
     $this->drupalGet('second-newsroom');
-    $this->assertText('Second newsroom');
-    $this->assertNoText('News article 1');
+    $this->assertSession()->pageTextContains('Second newsroom');
+    $this->assertSession()->pageTextNotContains('News article 1');
 
     // Post news into the second newsroom.
     $body = $this->randomMachineName(64);
@@ -252,11 +252,11 @@ class NewsPageTest extends BrowserTestBase {
       'localgov_newsroom' => ['target_id' => $newsroom_2->id()],
     ]);
     $this->drupalGet('second-newsroom/' . date('Y') . '/news-article-2');
-    $this->assertText('News article 2');
+    $this->assertSession()->pageTextContains('News article 2');
     $this->drupalGet('second-newsroom');
-    $this->assertText('Second newsroom');
-    $this->assertNoText('News article 1');
-    $this->assertText('News article 2');
+    $this->assertSession()->pageTextContains('Second newsroom');
+    $this->assertSession()->pageTextNotContains('News article 1');
+    $this->assertSession()->pageTextContains('News article 2');
 
     // Add News article 1 to the featured news block.
     $newsroom->set('localgov_newsroom_featured', ['target_id' => $news_articles[1]->id()]);
