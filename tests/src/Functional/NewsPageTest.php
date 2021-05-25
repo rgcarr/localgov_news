@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\localgov_news\Functional;
 
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\media\Entity\Media;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -117,7 +115,7 @@ class NewsPageTest extends BrowserTestBase {
     $this->drupalGet('/node/add/localgov_news_article');
     $assert->fieldExists('edit-localgov-newsroom');
 
-    $this->drupalGet($article->url('edit-form'));
+    $this->drupalGet($article->toUrl('edit-form'));
     $this->submitForm([
       'Title' => 'News article',
       'Summary' => 'Article summary',

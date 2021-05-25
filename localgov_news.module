@@ -33,7 +33,8 @@ function localgov_news_theme($existing, $type, $theme, $path) {
 
 /**
  * Implements hook_tokens_alter().
- * Needed to correctly render schema metadata for categories containing commas
+ *
+ * Needed to correctly render schema metadata for categories containing commas.
  */
 function localgov_news_tokens_alter(&$replacements, $context) {
   // Remove commas in news categories so they are not split.
@@ -45,7 +46,7 @@ function localgov_news_tokens_alter(&$replacements, $context) {
 }
 
 /**
- * Implements hook_views_query_alter
+ * Implements hook_views_query_alter().
  */
 function localgov_news_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
   if ($view->id() === 'localgov_news_list' && $query instanceof Sql) {
@@ -95,7 +96,7 @@ function localgov_news_field_widget_multivalue_form_alter(array &$elements, Form
   // This is presently just restricting the search query and not the field
   // itself.
   if ($field_definition->getName() == 'localgov_newsroom_featured') {
-    if ($form_state->getFormObject() instanceOf EntityFormInterface) {
+    if ($form_state->getFormObject() instanceof EntityFormInterface) {
       $nid = $form_state->getformObject()->getEntity()->id();
     }
     foreach ($elements as $delta => $element) {

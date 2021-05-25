@@ -30,7 +30,6 @@ class PromotedNewsWidgetTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   public static $modules = [
-  //  'node',
     'field_ui',
     'localgov_core',
     'localgov_media',
@@ -77,7 +76,7 @@ class PromotedNewsWidgetTest extends WebDriverTestBase {
    */
   public function testPromoteAutocompleteWidget() {
     for ($i = 1; $i < 4; $i++) {
-      $news_articles[$i] = $this->createNode([
+      $this->createNode([
         'title' => 'News article ' . $i,
         'body' => $this->randomString(250),
         'type' => 'localgov_news_article',
@@ -86,7 +85,7 @@ class PromotedNewsWidgetTest extends WebDriverTestBase {
       ]);
     }
     for ($i = 4; $i < 7; $i++) {
-      $news_articles[$i] = $this->createNode([
+      $this->createNode([
         'title' => 'News article ' . $i,
         'body' => $this->randomString(250),
         'type' => 'localgov_news_article',
