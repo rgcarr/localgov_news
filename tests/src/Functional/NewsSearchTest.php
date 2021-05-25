@@ -43,7 +43,6 @@ class NewsSearchTest extends BrowserTestBase {
    */
   public static $modules = [
     'localgov_news',
-    'localgov_newsroom',
   ];
 
   /**
@@ -62,11 +61,13 @@ class NewsSearchTest extends BrowserTestBase {
       'value' => 'Science is the search for truth, that is the effort to understand the world: it involves the rejection of bias, of dogma, of revelation, but not the rejection of morality.',
       'summary' => 'One of the greatest joys known to man is to take a flight into ignorance in search of knowledge.',
     ];
+    $newsroom = $this->getNodeByTitle('News');
     $this->createNode([
       'title' => 'Test News Article',
       'body' => $body,
       'type' => 'localgov_news_article',
       'status' => NodeInterface::PUBLISHED,
+      'localgov_newsroom' => ['target_id' => $newsroom->id()],
     ]);
 
     $this->drupalLogout();
@@ -77,6 +78,12 @@ class NewsSearchTest extends BrowserTestBase {
    * Basic search functionality.
    */
   public function testNewsSearch() {
+    // Defaults to be on 'news' page.
+    $this->drupalGet('news');
+    $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply');
+    $this->assertSession()->pageTextContains('Test News Article');
+
+    // Defaults to be on 'news' path page.
     $this->drupalGet('news/test-news-article');
     $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply');
     $this->assertSession()->pageTextContains('Test News Article');

@@ -4,10 +4,11 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_result
     - field.field.node.localgov_news_article.body
+    - field.field.node.localgov_news_article.field_media_image
     - field.field.node.localgov_news_article.localgov_news_categories
     - field.field.node.localgov_news_article.localgov_news_date
-    - field.field.node.localgov_news_article.localgov_news_image
     - field.field.node.localgov_news_article.localgov_news_related
+    - field.field.node.localgov_news_article.localgov_newsroom
     - node.type.localgov_news_article
   enforced:
     module:
@@ -28,9 +29,10 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_media_image: true
+  links: true
   localgov_news_categories: true
   localgov_news_date: true
-  localgov_news_image: true
   localgov_news_related: true
-  links: true
+  localgov_newsroom: true
   search_api_excerpt: true

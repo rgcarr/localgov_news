@@ -176,8 +176,6 @@ display:
               anonymous: '0'
               localgov_news_editor: '0'
             placeholder: ''
-            expose_fields: false
-            searched_fields_id: search_api_fulltext_searched_fields
           is_grouped: false
           group_info:
             label: ''

@@ -3,11 +3,10 @@ status: true
 dependencies:
   config:
     - field.storage.node.localgov_newsroom_featured
-    - node.type.localgov_news_article
     - node.type.localgov_newsroom
   enforced:
     module:
-      - localgov_newsroom
+      - localgov_news
 id: node.localgov_newsroom.localgov_newsroom_featured
 field_name: localgov_newsroom_featured
 entity_type: node
@@ -19,12 +18,10 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: views
   handler_settings:
-    target_bundles:
-      localgov_news_article: localgov_news_article
-    sort:
-      field: _none
-    auto_create: false
-    auto_create_bundle: ''
+    view:
+      view_name: localgov_news_list
+      display_name: newsroom_entity_reference
+      arguments: {  }
 field_type: entity_reference

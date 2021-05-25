@@ -4,7 +4,6 @@ dependencies:
   enforced:
     module:
       - localgov_news
-third_party_settings: {  }
 name: 'News article'
 type: localgov_news_article
 description: 'A stand-alone news article that may also appear in a news listing page.'

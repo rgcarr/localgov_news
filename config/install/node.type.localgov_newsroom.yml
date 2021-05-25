@@ -4,7 +4,6 @@ dependencies:
   enforced:
     module:
       - localgov_news
-      - localgov_newsroom
   module:
     - menu_ui
 third_party_settings:

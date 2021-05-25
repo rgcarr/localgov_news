@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\localgov_news\Functional;
 
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\media\Entity\Media;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -46,7 +44,6 @@ class NewsPageTest extends BrowserTestBase {
     'localgov_media',
     'localgov_topics',
     'localgov_news',
-    'localgov_newsroom',
     'field_ui',
     'pathauto',
   ];
@@ -77,100 +74,152 @@ class NewsPageTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('body');
     $this->assertSession()->pageTextContains('localgov_news_categories');
     $this->assertSession()->pageTextContains('localgov_news_date');
-    $this->assertSession()->pageTextContains('localgov_news_image');
+    $this->assertSession()->pageTextContains('field_media_image');
     $this->assertSession()->pageTextContains('localgov_news_related');
+    $this->assertSession()->pageTextContains('localgov_newsroom');
+  }
+
+  /**
+   * Test node edit forms.
+   */
+  public function testNewsEditForm() {
+    // Filling in the media field is a bit fiddly.
+    $media_field = $this->container
+      ->get('entity_type.manager')
+      ->getStorage('field_config')
+      ->load('node.localgov_news_article.field_media_image');
+    $media_field->setRequired(FALSE);
+    $media_field->save();
+
+    $this->drupalLogin($this->adminUser);
+    // By default there should not be a newsroom field displayed,
+    // but all news goes into the one newsroom.
+    $this->drupalGet('/node/add/localgov_news_article');
+    $assert = $this->assertSession();
+    $assert->fieldNotExists('edit-localgov-newsroom');
+    $this->submitForm([
+      'Title' => 'News article',
+      'Summary' => 'Article summary',
+      'Body' => 'Article body',
+    ], 'Save');
+    $newsroom = $this->getNodeByTitle('News');
+    $article = $this->getNodeByTitle('News article');
+    $this->assertEqual($article->localgov_newsroom->target_id, $newsroom->id());
+
+    // Second newsroom.
+    $newsroom_2 = $this->createNode([
+      'title' => 'Second newsroom',
+      'type' => 'localgov_newsroom',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+    $this->drupalGet('/node/add/localgov_news_article');
+    $assert->fieldExists('edit-localgov-newsroom');
+
+    $this->drupalGet($article->toUrl('edit-form'));
+    $this->submitForm([
+      'Title' => 'News article',
+      'Summary' => 'Article summary',
+      'Body' => 'Article body',
+      'Newsroom' => $newsroom_2->id(),
+    ], 'Save');
+    $this->nodeStorage->resetCache();
+    $article = $this->nodeStorage->load($article->id());
+    $this->assertEqual($article->localgov_newsroom->target_id, $newsroom_2->id());
   }
 
   /**
    * News article, newsroom, featured news.
    */
   public function testNewsPages() {
+    $news_articles = [];
+    // Default newsroom generated on install.
+    $newsroom = $this->getNodeByTitle('News');
+
+    // Post news into default newsroom.
     $body = $this->randomMachineName(64);
-    $newsArticle = $this->createNode([
+    $news_articles[1] = $this->createNode([
       'title' => 'News article 1',
       'body' => $body,
       'type' => 'localgov_news_article',
       'status' => NodeInterface::PUBLISHED,
+      'localgov_newsroom' => ['target_id' => $newsroom->id()],
     ]);
-
+    // News is the default path of the default $newsroom.
     $this->drupalGet('news/' . date('Y') . '/news-article-1');
     $this->assertText('News article 1');
     $this->assertText($body);
+    $this->drupalGet('news');
+    $this->assertSession()->elementContains('css', 'div.view--teasers', 'News article 1');
 
-    $newsroom = $this->createNode([
-      'title' => 'News',
+    // Second newsroom. Alias will be second-newsroom.
+    $newsroom_2 = $this->createNode([
+      'title' => 'Second newsroom',
       'type' => 'localgov_newsroom',
-      'path' => [
-        'alias' => '/news',
-      ],
       'status' => NodeInterface::PUBLISHED,
     ]);
+    $this->drupalGet('second-newsroom');
+    $this->assertText('Second newsroom');
+    $this->assertNoText('News article 1');
 
-    $this->drupalGet('news');
-    $this->assertText('News article 1');
+    // Post news into the second newsroom.
+    $body = $this->randomMachineName(64);
+    $news_articles[2] = $this->createNode([
+      'title' => 'News article 2',
+      'body' => $body,
+      'type' => 'localgov_news_article',
+      'status' => NodeInterface::PUBLISHED,
+      'localgov_newsroom' => ['target_id' => $newsroom_2->id()],
+    ]);
+    $this->drupalGet('second-newsroom/' . date('Y') . '/news-article-2');
+    $this->assertText('News article 2');
+    $this->drupalGet('second-newsroom');
+    $this->assertText('Second newsroom');
+    $this->assertNoText('News article 1');
+    $this->assertText('News article 2');
 
     // Add News article 1 to the featured news block.
-    $newsroom->set('localgov_newsroom_featured', $newsArticle->id());
+    $newsroom->set('localgov_newsroom_featured', ['target_id' => $news_articles[1]->id()]);
     $newsroom->save();
-    drupal_flush_all_caches();
-    $this->drupalGet('news');
+    $this->drupalGet($newsroom->toUrl());
+    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 1');
 
-    // Test the Featured news block displays.
-    $this->assertSession()->elementExists('css', 'div#block-localgov-featured-news-articles');
-
-    // Test that News article 1 is no longer included in the news listing.
-    $this->assertSession()->elementNotExists('css', 'div#infinite-scroll--wrapper article');
-
-  }
-
-  /**
-   * News default media.
-   */
-  public function testNewsMedia() {
-    // Image file for testing.
-    $imageData = file_get_contents('https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg');
-    $destination = 'public://example.jpg';
-    $imageFile = file_save_data($imageData, $destination, FileSystemInterface::EXISTS_REPLACE);
-    $this->assertTrue(file_exists($destination));
-
-    // Create default news image entity using example file.
-    $newsMedia = Media::create([
-      'name' => 'Example',
-      'bundle' => 'localgov_news_default_image',
-      'field_media_image' => [
-        'target_id' => $imageFile->id(),
-        'alt' => 'Alternative text',
-      ],
+    for ($i = 3; $i < 10; $i++) {
+      $news_articles[$i] = $this->createNode([
+        'title' => 'News article ' . $i,
+        'body' => $this->randomString(250),
+        'type' => 'localgov_news_article',
+        'status' => NodeInterface::PUBLISHED,
+        'localgov_newsroom' => ['target_id' => $newsroom->id()],
+      ]);
+    }
+    $this->drupalGet($newsroom->toUrl());
+    for ($i = 3; $i < 10; $i++) {
+      $this->assertSession()->elementContains('css', 'div.view--teasers', 'News article ' . $i);
+    }
+    $newsroom->set('localgov_newsroom_featured', [
+      ['target_id' => $news_articles[3]->id()],
+      ['target_id' => $news_articles[5]->id()],
+      ['target_id' => $news_articles[4]->id()],
     ]);
-    $newsMedia->setPublished()->save();
-
-    // Confirm default news media created.
-    $this->assertSame('Example', $newsMedia->getName(), 'The media item was not created with the correct name.');
-
-    // Use admin form to select default media because...
-    // localgov_news_node_form_submit sets image entity from default.
-    $this->drupalLogin($this->adminUser);
-    $this->drupalGet('node/add/localgov_news_article');
-    $form = $this->getSession()->getPage();
-    $form->fillField('edit-title-0-value', 'News article with default image');
-    $form->fillField('edit-localgov-news-summary', 'News article summary text');
-    $form->fillField('edit-body-0-value', 'News article body text');
-    $form->selectFieldOption('edit-localgov-news-default-image', $newsMedia->id());
-    $form->pressButton('edit-submit');
-
-    // Images only appear in the newsroom and search results.
-    $this->createNode([
-      'title' => 'News',
-      'type' => 'localgov_newsroom',
-      'path' => [
-        'alias' => '/news',
-      ],
-      'status' => NodeInterface::PUBLISHED,
+    $newsroom->save();
+    $news_articles[1]->set('promote', 1);
+    $news_articles[1]->save();
+    $this->drupalGet($newsroom->toUrl());
+    $this->assertSession()->elementNotContains('css', 'div.localgov-featured-news', 'News article 1');
+    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 3');
+    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 5');
+    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 4');
+    $newsroom->set('localgov_newsroom_featured', [
+      ['target_id' => $news_articles[3]->id()],
+      ['target_id' => $news_articles[5]->id()],
     ]);
-
-    $this->drupalGet('news');
-    $this->assertSession()->responseContains('Alternative text');
-
+    $newsroom->save();
+    $this->drupalGet($newsroom->toUrl());
+    $this->assertSession()->elementNotContains('css', 'div.localgov-featured-news', 'News article 4');
+    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 3');
+    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 5');
+    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 1');
+    $this->assertSession()->elementContains('css', 'div.view--teasers', 'News article 4');
   }
 
 }

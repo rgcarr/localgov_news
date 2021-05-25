@@ -23,6 +23,6 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: "/news\r\n/news/*"
+    pages: '/news/*'
     negate: false
     context_mapping: {  }

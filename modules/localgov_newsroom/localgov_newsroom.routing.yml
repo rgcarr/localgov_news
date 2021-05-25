@@ -1,7 +1,0 @@
-
-localgov_newsroom.newsroom_ajax_callback:
-  path: '/news/callback'
-  defaults:
-    _controller: '\Drupal\localgov_newsroom\Controller\NewsroomController::ajaxCallback'
-  requirements:
-    _permission: 'access content'
