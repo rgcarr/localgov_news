@@ -54,12 +54,6 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
   public function entityExtraFieldInfo() {
     $fields = [];
 
-    $fields['node']['localgov_newsroom']['display']['localgov_newsroom_featured_view'] = [
-      'label' => $this->t('Featured news listing'),
-      'description' => $this->t("Output from the embedded view for featured, and promoted, news."),
-      'weight' => -20,
-      'visible' => TRUE,
-    ];
     $fields['node']['localgov_newsroom']['display']['localgov_newsroom_all_view'] = [
       'label' => $this->t('All other news listing'),
       'description' => $this->t("Output facets the embedded view for all other news in newsroom."),
@@ -95,9 +89,6 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
    */
   public function nodeView(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
     // Add view if enabled.
-    if ($display->getComponent('localgov_newsroom_featured_view')) {
-      $build['localgov_newsroom_featured_view'] = $this->getViewEmbed($node, 'featured_news');
-    }
     if ($display->getComponent('localgov_newsroom_all_view')) {
       $build['localgov_newsroom_all_view'] = $this->getViewEmbed($node, 'all_news');
     }
