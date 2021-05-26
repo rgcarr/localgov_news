@@ -24,6 +24,10 @@ function localgov_news_theme($existing, $type, $theme, $path) {
       'template' => 'node--localgov-news-article--full',
       'base hook' => 'node',
     ],
+    'field__localgov_newsroom_featured' => [
+      'template' => 'field--localgov-newsroom-featured',
+      'base hook' => 'field',
+    ],
   ];
 }
 
