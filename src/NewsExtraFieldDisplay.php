@@ -40,6 +40,8 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   Block plugin manager.
+   * @param \Drupal\content_moderation\ModerationInformationInterface|null $moderation_information
+   *   The moderation information service.
    */
   public function __construct(BlockManagerInterface $block_manager, ModerationInformationInterface $moderation_information = NULL) {
     $this->blockManager = $block_manager;
