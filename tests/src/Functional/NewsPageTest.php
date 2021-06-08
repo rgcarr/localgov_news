@@ -104,7 +104,7 @@ class NewsPageTest extends BrowserTestBase {
     ], 'Save');
     $newsroom = $this->getNodeByTitle('News');
     $article = $this->getNodeByTitle('News article');
-    $this->assertEqual($article->localgov_newsroom->target_id, $newsroom->id());
+    $this->assertEquals($article->localgov_newsroom->target_id, $newsroom->id());
 
     // Second newsroom.
     $newsroom_2 = $this->createNode([
@@ -124,7 +124,88 @@ class NewsPageTest extends BrowserTestBase {
     ], 'Save');
     $this->nodeStorage->resetCache();
     $article = $this->nodeStorage->load($article->id());
-    $this->assertEqual($article->localgov_newsroom->target_id, $newsroom_2->id());
+    $this->assertEquals($article->localgov_newsroom->target_id, $newsroom_2->id());
+  }
+
+  /**
+   * Test node edit form promote checkbox.
+   */
+  public function testNewsEditPromoteCheckbox() {
+    // Filling in the media field is a bit fiddly.
+    $media_field = $this->container
+      ->get('entity_type.manager')
+      ->getStorage('field_config')
+      ->load('node.localgov_news_article.field_media_image');
+    $media_field->setRequired(FALSE);
+    $media_field->save();
+
+    $this->drupalLogin($this->adminUser);
+    // Add article.
+    $this->drupalGet('/node/add/localgov_news_article');
+    $this->submitForm([
+      'Title' => 'News article 1',
+      'Summary' => 'Article summary',
+      'Body' => 'Article body',
+      'Promote on newsroom' => 1,
+      'Published' => 1,
+    ], 'Save');
+    $newsroom = $this->getNodeByTitle('News');
+    $article = $this->getNodeByTitle('News article 1');
+    $promoted = $newsroom->localgov_newsroom_featured->getValue();
+    $this->assertTrue(in_array(['target_id' => $article->id()], $promoted));
+
+    // Remove article.
+    $this->drupalGet($article->toUrl('edit-form'));
+    $this->submitForm([
+      'Promote on newsroom' => 0,
+    ], 'Save');
+    $this->nodeStorage->resetCache();
+    $newsroom = $this->nodeStorage->load($newsroom->id());
+    $promoted = $newsroom->localgov_newsroom_featured->getValue();
+    $this->assertFalse(in_array(['target_id' => $article->id()], $promoted));
+
+    // Fill featured items.
+    for ($i = 2; $i < 5; $i++) {
+      $this->drupalGet('/node/add/localgov_news_article');
+      $this->submitForm([
+        'Title' => 'News article ' . $i,
+        'Summary' => 'Article summary',
+        'Body' => 'Article body',
+        'Promote on newsroom' => 1,
+        'Published' => 1,
+      ], 'Save');
+    }
+    $this->nodeStorage->resetCache();
+    $newsroom = $this->nodeStorage->load($newsroom->id());
+    $promoted = $newsroom->localgov_newsroom_featured->getValue();
+    $this->assertFalse(in_array(['target_id' => $article->id()], $promoted));
+    $article = $this->getNodeByTitle('News article 2');
+    $this->assertTrue(in_array(['target_id' => $article->id()], $promoted));
+    $article = $this->getNodeByTitle('News article 3');
+    $this->assertTrue(in_array(['target_id' => $article->id()], $promoted));
+    $article = $this->getNodeByTitle('News article 4');
+    $this->assertTrue(in_array(['target_id' => $article->id()], $promoted));
+
+    // Add one more first pushed off.
+    $this->drupalGet('/node/add/localgov_news_article');
+    $this->submitForm([
+      'Title' => 'News article 5',
+      'Summary' => 'Article summary',
+      'Body' => 'Article body',
+      'Promote on newsroom' => 1,
+      'Published' => 1,
+    ], 'Save');
+    $this->nodeStorage->resetCache();
+    $newsroom = $this->nodeStorage->load($newsroom->id());
+    $promoted = $newsroom->localgov_newsroom_featured->getValue();
+    $article = $this->getNodeByTitle('News article 2');
+    $this->assertFalse(in_array(['target_id' => $article->id()], $promoted));
+    $article = $this->getNodeByTitle('News article 3');
+    $this->assertTrue(in_array(['target_id' => $article->id()], $promoted));
+    $article = $this->getNodeByTitle('News article 4');
+    $this->assertTrue(in_array(['target_id' => $article->id()], $promoted));
+    $article = $this->getNodeByTitle('News article 5');
+    $this->assertTrue(in_array(['target_id' => $article->id()], $promoted));
   }
 
   /**
@@ -146,8 +227,8 @@ class NewsPageTest extends BrowserTestBase {
     ]);
     // News is the default path of the default $newsroom.
     $this->drupalGet('news/' . date('Y') . '/news-article-1');
-    $this->assertText('News article 1');
-    $this->assertText($body);
+    $this->assertSession()->pageTextContains('News article 1');
+    $this->assertSession()->pageTextContains($body);
     $this->drupalGet('news');
     $this->assertSession()->elementContains('css', 'div.view--teasers', 'News article 1');
 
@@ -158,8 +239,8 @@ class NewsPageTest extends BrowserTestBase {
       'status' => NodeInterface::PUBLISHED,
     ]);
     $this->drupalGet('second-newsroom');
-    $this->assertText('Second newsroom');
-    $this->assertNoText('News article 1');
+    $this->assertSession()->pageTextContains('Second newsroom');
+    $this->assertSession()->pageTextNotContains('News article 1');
 
     // Post news into the second newsroom.
     $body = $this->randomMachineName(64);
@@ -171,11 +252,11 @@ class NewsPageTest extends BrowserTestBase {
       'localgov_newsroom' => ['target_id' => $newsroom_2->id()],
     ]);
     $this->drupalGet('second-newsroom/' . date('Y') . '/news-article-2');
-    $this->assertText('News article 2');
+    $this->assertSession()->pageTextContains('News article 2');
     $this->drupalGet('second-newsroom');
-    $this->assertText('Second newsroom');
-    $this->assertNoText('News article 1');
-    $this->assertText('News article 2');
+    $this->assertSession()->pageTextContains('Second newsroom');
+    $this->assertSession()->pageTextNotContains('News article 1');
+    $this->assertSession()->pageTextContains('News article 2');
 
     // Add News article 1 to the featured news block.
     $newsroom->set('localgov_newsroom_featured', ['target_id' => $news_articles[1]->id()]);
@@ -202,24 +283,11 @@ class NewsPageTest extends BrowserTestBase {
       ['target_id' => $news_articles[4]->id()],
     ]);
     $newsroom->save();
-    $news_articles[1]->set('promote', 1);
-    $news_articles[1]->save();
     $this->drupalGet($newsroom->toUrl());
     $this->assertSession()->elementNotContains('css', 'div.localgov-featured-news', 'News article 1');
     $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 3');
     $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 5');
     $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 4');
-    $newsroom->set('localgov_newsroom_featured', [
-      ['target_id' => $news_articles[3]->id()],
-      ['target_id' => $news_articles[5]->id()],
-    ]);
-    $newsroom->save();
-    $this->drupalGet($newsroom->toUrl());
-    $this->assertSession()->elementNotContains('css', 'div.localgov-featured-news', 'News article 4');
-    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 3');
-    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 5');
-    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 1');
-    $this->assertSession()->elementContains('css', 'div.view--teasers', 'News article 4');
   }
 
 }

@@ -15,10 +15,33 @@ bundle: localgov_newsroom
 mode: default
 content:
   links:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  localgov_news_facets:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  localgov_news_search:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  localgov_newsroom_all_view:
     weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
+  localgov_newsroom_featured:
+    type: entity_reference_entity_view
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      view_mode: teaser
+      link: false
+    third_party_settings: {  }
 hidden:
-  localgov_newsroom_featured: true
   search_api_excerpt: true
