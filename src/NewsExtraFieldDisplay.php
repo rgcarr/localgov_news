@@ -117,17 +117,40 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
       ($form_display = $form_state->get('form_display')) &&
       ($form_display->getComponent('localgov_news_newsroom_promote'))
     ) {
+
+      $form_object = $form_state->getFormObject();
+      $node = $form_object->getEntity();
+      /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
+      $moderation_information = \Drupal::service('content_moderation.moderation_information');
+      if (empty($moderation_information) || !$moderation_information->isModeratedEntity($node)) {
+        $visible = [
+          ":input[name='status[value]']" => [
+            'checked' => TRUE,
+          ],
+        ];
+      }
+      else {
+        $workflow = $moderation_information->getWorkflowForEntity($node);
+        $type_plugin = $workflow->getTypePlugin();
+        $transitions = $type_plugin->getTransitions();
+        foreach ($transitions as $transition) {
+          $state = $transition->to();
+          if ($state->isPublishedState()) {
+            $published[] = [":input[name='moderation_state[0][state]']" => ['value' => $state->id()]];
+            $published[] = 'or';
+          }
+        }
+        array_pop($published);
+        $visible = [$published];
+      }
+
       $form['localgov_news_newsroom_promote'] = [
         '#title' => $this->t('Promote on newsroom'),
         '#type' => 'checkbox',
         '#description' => $this->t("Add to promoted news in the newsroom. If there is already the maximum number of promoted news items the last will be removed to make space."),
-        '#default_value' => self::articlePromotedStatus($form_state->getFormObject()),
+        '#default_value' => self::articlePromotedStatus($form_object),
         '#states' => [
-          'visible' => [
-            ":input[name='status[value]']" => [
-              'checked' => TRUE,
-            ],
-          ],
+          'visible' => $visible,
         ],
       ];
       $form['actions']['submit']['#submit'][] = [self::class, 'articleSubmit'];
