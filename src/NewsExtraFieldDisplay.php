@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\node\NodeForm;
 use Drupal\node\NodeInterface;
 use Drupal\views\Views;
@@ -28,13 +29,21 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
   protected $blockManager;
 
   /**
+   * The moderation information service.
+   *
+   * @var \Drupal\content_moderation\ModerationInformationInterface|null
+   */
+  protected $moderationInformation;
+
+  /**
    * EntityChildRelationshipUi constructor.
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   Block plugin manager.
    */
-  public function __construct(BlockManagerInterface $block_manager) {
+  public function __construct(BlockManagerInterface $block_manager, ModerationInformationInterface $moderation_information = NULL) {
     $this->blockManager = $block_manager;
+    $this->moderationInformation = $moderation_information;
   }
 
   /**
@@ -42,7 +51,8 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.block')
+      $container->get('plugin.manager.block'),
+      $container->has('content_moderation.moderation_information') ? $container->get('content_moderation.moderation_information') : NULL
     );
   }
 
@@ -120,9 +130,7 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
 
       $form_object = $form_state->getFormObject();
       $node = $form_object->getEntity();
-      /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
-      $moderation_information = \Drupal::service('content_moderation.moderation_information');
-      if (empty($moderation_information) || !$moderation_information->isModeratedEntity($node)) {
+      if (empty($this->moderationInformation) || !$this->moderationInformation->isModeratedEntity($node)) {
         $visible = [
           ":input[name='status[value]']" => [
             'checked' => TRUE,
@@ -130,7 +138,7 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
         ];
       }
       else {
-        $workflow = $moderation_information->getWorkflowForEntity($node);
+        $workflow = $this->moderationInformation->getWorkflowForEntity($node);
         $type_plugin = $workflow->getTypePlugin();
         $transitions = $type_plugin->getTransitions();
         foreach ($transitions as $transition) {
