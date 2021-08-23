@@ -25,7 +25,7 @@ class NewsPageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'localgov_theme';
+  protected $defaultTheme = 'localgov_base';
 
   /**
    * A user with permission to bypass content access checks.
