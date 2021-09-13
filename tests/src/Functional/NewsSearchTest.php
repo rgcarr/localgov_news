@@ -78,17 +78,19 @@ class NewsSearchTest extends BrowserTestBase {
    * Basic search functionality.
    */
   public function testNewsSearch() {
+
+    drupal_flush_all_caches();
     // Defaults to be on 'news' page.
     $this->drupalGet('news');
     $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply');
     $this->assertSession()->pageTextContains('Test News Article');
 
     // Defaults to be on 'news' path page.
-    $this->drupalGet('news/test-news-article');
+    $this->drupalGet('news/2021/test-news-article');
     $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply');
     $this->assertSession()->pageTextContains('Test News Article');
 
-    $this->drupalGet('news/test-news-article');
+    $this->drupalGet('news/2021/test-news-article');
     $this->submitForm(['edit-search-api-fulltext' => 'xyzzy'], 'Apply');
     $this->assertSession()->pageTextNotContains('Test News Article');
   }
