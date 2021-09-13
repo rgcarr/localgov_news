@@ -11,7 +11,7 @@ dependencies:
     - views
   theme:
     - localgov_base
-id: localgov_news_search
+id: localgov_base_localgov_news_search
 theme: localgov_base
 region: sidebar_second
 weight: -2
@@ -21,7 +21,7 @@ settings:
   id: 'views_exposed_filter_block:localgov_news_search-page_search_news'
   label: ''
   provider: views
-  label_display: visible
+  label_display: '0'
   views_label: ''
 visibility:
   request_path:

@@ -8,7 +8,7 @@ dependencies:
     - system
   theme:
     - localgov_base
-id: localgov_news_category
+id: localgov_base_localgov_news_category
 theme: localgov_base
 region: sidebar_second
 weight: 0
