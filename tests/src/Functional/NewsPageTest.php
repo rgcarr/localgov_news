@@ -25,7 +25,7 @@ class NewsPageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'localgov_theme';
+  protected $defaultTheme = 'localgov_base';
 
   /**
    * A user with permission to bypass content access checks.
@@ -262,7 +262,7 @@ class NewsPageTest extends BrowserTestBase {
     $newsroom->set('localgov_newsroom_featured', ['target_id' => $news_articles[1]->id()]);
     $newsroom->save();
     $this->drupalGet($newsroom->toUrl());
-    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 1');
+    $this->assertSession()->elementContains('css', 'div.newsroom__featured-news', 'News article 1');
 
     for ($i = 3; $i < 10; $i++) {
       $news_articles[$i] = $this->createNode([
@@ -284,10 +284,10 @@ class NewsPageTest extends BrowserTestBase {
     ]);
     $newsroom->save();
     $this->drupalGet($newsroom->toUrl());
-    $this->assertSession()->elementNotContains('css', 'div.localgov-featured-news', 'News article 1');
-    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 3');
-    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 5');
-    $this->assertSession()->elementContains('css', 'div.localgov-featured-news', 'News article 4');
+    $this->assertSession()->elementNotContains('css', 'div.newsroom__featured-news', 'News article 1');
+    $this->assertSession()->elementContains('css', 'div.newsroom__featured-news', 'News article 3');
+    $this->assertSession()->elementContains('css', 'div.newsroom__featured-news', 'News article 5');
+    $this->assertSession()->elementContains('css', 'div.newsroom__featured-news', 'News article 4');
   }
 
 }
