@@ -261,7 +261,7 @@ display:
           plugin_id: numeric
       display_extenders: {  }
       use_ajax: false
-      css_class: view--teasers
+      css_class: 'view--teasers lgd-teaser-list'
       filter_groups:
         operator: AND
         groups:

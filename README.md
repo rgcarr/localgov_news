@@ -13,7 +13,7 @@ Provides the pages and navigation for presenting news articles. A part of the Lo
 ## Install process
 - Standard Drupal module installation process applies.
 
-- By default the search and facet blocks for news are shown in the view mode for the newsroom, and as blocks on all pages under the `news/*` path if you have the localgov_theme installed. Alternatively, add, or change the configuration for, these three blocks from the Drupal block layout admin page.
+- By default the search and facet blocks for news are shown in the view mode for the newsroom, and as blocks on all pages under the `news/*` path if you have the localgov_base theme installed. Alternatively, add, or change the configuration for, these three blocks from the Drupal block layout admin page.
 
 ## Usage
 - Newsroom
@@ -28,7 +28,7 @@ Provides the pages and navigation for presenting news articles. A part of the Lo
   - Image is a required field - authors can upload a new image or select an image from the media library.
   - Article nodes are not promoted - see the Featured News section below.
   - Article aliases are: [node:localgov_newsroom:entity:url:relative]/[node:localgov_news_date:date:html_year]/[node:title] thus prefacing the path with that of their newsroom, followed by year and sanitised title.
-  
+
 ## Structured data
 - The Schema.org Metatag module is used to generate structured data for individual news articles. This is rendered as JSON LD in the `<head>` element.
 
