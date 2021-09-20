@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\node\NodeForm;
 use Drupal\node\NodeInterface;
 use Drupal\views\Views;
@@ -28,13 +29,23 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
   protected $blockManager;
 
   /**
+   * The moderation information service.
+   *
+   * @var \Drupal\content_moderation\ModerationInformationInterface|null
+   */
+  protected $moderationInformation;
+
+  /**
    * EntityChildRelationshipUi constructor.
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   Block plugin manager.
+   * @param \Drupal\content_moderation\ModerationInformationInterface|null $moderation_information
+   *   The moderation information service.
    */
-  public function __construct(BlockManagerInterface $block_manager) {
+  public function __construct(BlockManagerInterface $block_manager, ModerationInformationInterface $moderation_information = NULL) {
     $this->blockManager = $block_manager;
+    $this->moderationInformation = $moderation_information;
   }
 
   /**
@@ -42,7 +53,8 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.block')
+      $container->get('plugin.manager.block'),
+      $container->has('content_moderation.moderation_information') ? $container->get('content_moderation.moderation_information') : NULL
     );
   }
 
@@ -117,17 +129,38 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
       ($form_display = $form_state->get('form_display')) &&
       ($form_display->getComponent('localgov_news_newsroom_promote'))
     ) {
+
+      $form_object = $form_state->getFormObject();
+      $node = $form_object->getEntity();
+      if (empty($this->moderationInformation) || !$this->moderationInformation->isModeratedEntity($node)) {
+        $visible = [
+          ":input[name='status[value]']" => [
+            'checked' => TRUE,
+          ],
+        ];
+      }
+      else {
+        $workflow = $this->moderationInformation->getWorkflowForEntity($node);
+        $type_plugin = $workflow->getTypePlugin();
+        $transitions = $type_plugin->getTransitions();
+        foreach ($transitions as $transition) {
+          $state = $transition->to();
+          if ($state->isPublishedState()) {
+            $published[] = [":input[name='moderation_state[0][state]']" => ['value' => $state->id()]];
+            $published[] = 'or';
+          }
+        }
+        array_pop($published);
+        $visible = [$published];
+      }
+
       $form['localgov_news_newsroom_promote'] = [
         '#title' => $this->t('Promote on newsroom'),
         '#type' => 'checkbox',
         '#description' => $this->t("Add to promoted news in the newsroom. If there is already the maximum number of promoted news items the last will be removed to make space."),
-        '#default_value' => self::articlePromotedStatus($form_state->getFormObject()),
+        '#default_value' => self::articlePromotedStatus($form_object),
         '#states' => [
-          'visible' => [
-            ":input[name='status[value]']" => [
-              'checked' => TRUE,
-            ],
-          ],
+          'visible' => $visible,
         ],
       ];
       $form['actions']['submit']['#submit'][] = [self::class, 'articleSubmit'];
