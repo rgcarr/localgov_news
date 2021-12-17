@@ -5,9 +5,15 @@
     "homepage": "https://github.com/localgovdrupal/localgov_news",
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/entity_reference_facet_link-3254358.git"
+        }
+    ],
     "require": {
         "drupal/entity_browser": "^2.5",
-        "drupal/entity_reference_facet_link": "^1.0.0-beta6",
+        "drupal/entity_reference_facet_link": "dev-entity_reference_facet_link-3254358",
         "drupal/facets": "^2.0",
         "drupal/field_group": "~3.0",
         "drupal/pathauto": "~1.0",
