@@ -13,7 +13,7 @@
     ],
     "require": {
         "drupal/entity_browser": "^2.5",
-        "drupal/entity_reference_facet_link": "dev-entity_reference_facet_link-3254358",
+        "drupal/entity_reference_facet_link": "dev-3254358-can-not-update",
         "drupal/facets": "^2.0",
         "drupal/field_group": "~3.0",
         "drupal/pathauto": "~1.0",
