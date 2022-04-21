@@ -20,6 +20,7 @@ function localgov_news_install() {
   $existing_newsroom = \Drupal::entityQuery('node')
     ->condition('type', 'localgov_newsroom')
     ->count()
+    ->accessCheck(FALSE)
     ->execute();
   // If there isn't create the default.
   if (!$existing_newsroom) {
