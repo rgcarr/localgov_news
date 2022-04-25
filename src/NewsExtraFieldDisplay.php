@@ -125,7 +125,9 @@ class NewsExtraFieldDisplay implements ContainerInjectionInterface {
    * @see localgov_news_form_alter()
    */
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
+    $node_form = ($form_id == 'node_localgov_news_article_form' || $form_id == 'node_localgov_news_article_edit_form' ?? FALSE);
     if (
+      ($node_form) &&
       ($form_display = $form_state->get('form_display')) &&
       ($form_display->getComponent('localgov_news_newsroom_promote'))
     ) {
