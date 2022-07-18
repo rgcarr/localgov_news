@@ -16,9 +16,8 @@ Provides the pages and navigation for presenting news articles. A part of the Lo
 - By default the search and facet blocks for news are shown in the view mode for the newsroom, and as blocks on all pages under the `news/*` path if you have the localgov_base theme installed. Alternatively, add, or change the configuration for, these three blocks from the Drupal block layout admin page.
 
 ## Usage
-- Newsroom
-  - A default News '/news' newsroom will be installed. Articles by default go into this.
-  - It is possible to post more newsrooms for articles to go into.
+- Create a Newsroom
+  - Create one, or more, newsrooms for articles to go into.
   - A newsroom has a field in which it is possible to select 3 featured articles.
   - The Featured News block shows up to 3 featured articles - if there are fewer than 3 explicitly featured articles the remainder will be filled by the latest promoted articles (if any).
   - The Article List block will show 10 articles per page, excluding those in the featured block.
