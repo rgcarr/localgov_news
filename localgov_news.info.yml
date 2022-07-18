@@ -20,6 +20,7 @@ dependencies:
   - field_group:field_group
   - link_attributes:link_attributes
   - localgov_core:localgov_core
+  - localgov_topics:localgov_topics
   - pathauto:pathauto
   - search_api:search_api
   - search_api:search_api_db

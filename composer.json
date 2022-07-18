@@ -10,6 +10,7 @@
         "drupal/facets": "^2.0",
         "drupal/entity_reference_facet_link": "^2.0.0-beta",
         "drupal/field_group": "~3.0",
+        "drupal/link_attributes": "^1.2",
         "drupal/pathauto": "~1.0",
         "drupal/search_api": "^1.17",
         "drupal/search_api_autocomplete": "^1.3",
