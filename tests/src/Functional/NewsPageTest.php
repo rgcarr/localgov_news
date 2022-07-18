@@ -60,6 +60,13 @@ class NewsPageTest extends BrowserTestBase {
       'administer node fields',
     ]);
     $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
+
+    // Newsroom.
+    $this->createNode([
+      'title' => 'News',
+      'type' => 'localgov_newsroom',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
   }
 
   /**
