@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the localgov_news module.
  */
 
-use Drupal\node\Entity\Node;
 use Drupal\user\RoleInterface;
 
 /**
@@ -14,21 +13,5 @@ use Drupal\user\RoleInterface;
 function localgov_news_install() {
   if (\Drupal::moduleHandler()->moduleExists('user')) {
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['use search_api_autocomplete for localgov_news_search']);
-  }
-
-  // Just in case there's something newsroom already there check.
-  $existing_newsroom = \Drupal::entityQuery('node')
-    ->condition('type', 'localgov_newsroom')
-    ->count()
-    ->accessCheck(FALSE)
-    ->execute();
-  // If there isn't create the default.
-  if (!$existing_newsroom) {
-    $newsroom = Node::create([
-      'type' => 'localgov_newsroom',
-      'title' => t('News'),
-      'uid' => 1,
-    ]);
-    $newsroom->save();
   }
 }

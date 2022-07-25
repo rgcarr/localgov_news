@@ -61,7 +61,13 @@ class NewsSearchTest extends BrowserTestBase {
       'value' => 'Science is the search for truth, that is the effort to understand the world: it involves the rejection of bias, of dogma, of revelation, but not the rejection of morality.',
       'summary' => 'One of the greatest joys known to man is to take a flight into ignorance in search of knowledge.',
     ];
-    $newsroom = $this->getNodeByTitle('News');
+
+    // Newsroom.
+    $newsroom = $this->createNode([
+      'title' => 'News',
+      'type' => 'localgov_newsroom',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
     $this->createNode([
       'title' => 'Test News Article',
       'body' => $body,
