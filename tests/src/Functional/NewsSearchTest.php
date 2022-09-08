@@ -43,6 +43,8 @@ class NewsSearchTest extends BrowserTestBase {
    */
   public static $modules = [
     'localgov_news',
+    'localgov_search',
+    'localgov_search_db',
   ];
 
   /**
@@ -74,6 +76,7 @@ class NewsSearchTest extends BrowserTestBase {
       'type' => 'localgov_news_article',
       'status' => NodeInterface::PUBLISHED,
       'localgov_newsroom' => ['target_id' => $newsroom->id()],
+      'localgov_news_date' => ['value' => '2020-06-01'],
     ]);
 
     $this->drupalLogout();
@@ -85,20 +88,30 @@ class NewsSearchTest extends BrowserTestBase {
    */
   public function testNewsSearch() {
 
-    drupal_flush_all_caches();
     // Defaults to be on 'news' page.
     $this->drupalGet('news');
-    $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply');
+    $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply', 'views-exposed-form-localgov-news-search-page-search-news');
     $this->assertSession()->pageTextContains('Test News Article');
 
     // Defaults to be on 'news' path page.
-    $this->drupalGet('news/2021/test-news-article');
-    $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply');
+    $this->drupalGet("news/2020/test-news-article");
+    $this->submitForm(['edit-search-api-fulltext' => 'dogma'], 'Apply', 'views-exposed-form-localgov-news-search-page-search-news');
     $this->assertSession()->pageTextContains('Test News Article');
 
-    $this->drupalGet('news/2021/test-news-article');
-    $this->submitForm(['edit-search-api-fulltext' => 'xyzzy'], 'Apply');
+    $this->drupalGet("news/2020/test-news-article");
+    $this->submitForm(['edit-search-api-fulltext' => 'xyzzy'], 'Apply', 'views-exposed-form-localgov-news-search-page-search-news');
     $this->assertSession()->pageTextNotContains('Test News Article');
+  }
+
+  /**
+   * LocalGov Search integration.
+   */
+  public function testLocalgovSearch() {
+    $this->drupalGet('search', ['query' => ['s' => 'bias+dogma+revelation']]);
+    $this->assertSession()->pageTextContains('Test News Article');
+    $this->assertSession()->responseContains('<strong>bias</strong>');
+    $this->assertSession()->responseContains('<strong>dogma</strong>');
+    $this->assertSession()->responseContains('<strong>revelation</strong>');
   }
 
 }

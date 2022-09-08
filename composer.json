@@ -17,5 +17,8 @@
         "drupal/schema_metatag": "^2.1",
         "localgovdrupal/localgov_topics": "^1.0",
         "localgovdrupal/localgov_core": "^2.0"
+    },
+    "require-dev": {
+        "localgovdrupal/localgov_search": "^1.1"
     }
 }
