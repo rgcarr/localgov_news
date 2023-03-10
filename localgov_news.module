@@ -96,6 +96,37 @@ function localgov_news_field_widget_multivalue_form_alter(array &$elements, Form
       $elements['#value'] = key($options);
       $elements['#type'] = 'value';
     }
+
+    // Restrict options to user's Newsrooms if multiple newsrooms available
+    if (count($options) > 1) {
+      //Find users Newsrooms
+      $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+      // Check User contains relevant field
+      if ($user->hasField('field_editor_newsrooms')) {
+        $newsrooms = $user->get('field_editor_newsrooms')->getValue();
+        // Hide ones not in whitelist
+        if (count($newsrooms) > 0) {
+          $whitelist = [];
+          // Set Newsroom options according to User's whitelist
+          foreach ($newsrooms as $newsroom) {
+            $nid = $newsroom['target_id'];
+            // Check Newsroom ID is in options
+            if (array_key_exists($nid, $options)) {
+              $title = $options[$nid];
+              $whitelist[$nid] = $title;
+            }
+          }
+
+          // Check that the whitelist contains valid Newsrooms
+          if ($whitelist) {
+            // Hide all default newsrooms in options list
+            unset($elements['#options']);
+            // Add whitelisted Newsrooms back in
+            $elements['#options'] = $whitelist;
+          }
+        }
+      }
+    }
   }
 
   // Restrict the featured articles to articles in the newsroom.
